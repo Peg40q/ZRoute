@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<title>Z Route: Redemption</title>
+<style>
+*{box-sizing:border-box}body{font-family:'Segoe UI',Tahoma,Geneva,Verdana,sans-serif;background:#f0f2f5;margin:0;padding:20px;color:#1e2a3a;font-size:14px}.container{max-width:1400px;margin:0 auto}h1{text-align:center;font-size:1.6rem;margin-bottom:1rem;color:#1e466e}
+.time-panel{background:linear-gradient(135deg,#1e466e,#2c5a8c);color:#fff;border-radius:20px;margin-bottom:2rem;box-shadow:0 4px 12px rgba(0,0,0,0.1);overflow:hidden}.time-panel.collapsed .time-content{display:none}.time-panel-header{display:flex;justify-content:space-between;align-items:center;padding:0.8rem 1.5rem;cursor:pointer;background:rgba(0,0,0,0.1)}.next-event{font-size:1rem;font-weight:bold;background:rgba(255,255,255,0.2);padding:0.3rem 1rem;border-radius:40px;backdrop-filter:blur(4px);margin:0}.toggle-panel-btn{background:0 0;border:none;color:#fff;font-size:1.6rem;cursor:pointer;width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:50%}.toggle-panel-btn:hover{background:rgba(255,255,255,0.2)}.time-content{padding:0 1.5rem 1rem 1.5rem}.time-stats{display:flex;flex-wrap:wrap;gap:1rem;justify-content:space-between;align-items:baseline}.time-stats div{background:rgba(0,0,0,0.2);padding:0.3rem 1rem;border-radius:20px}
+.references{background:#fff;border-radius:20px;padding:1.5rem;margin-bottom:2rem;box-shadow:0 4px 12px rgba(0,0,0,0.05)}.tabs{display:flex;flex-wrap:wrap;gap:0.5rem;margin-bottom:1rem;border-bottom:2px solid #e2e8f0}.tab-button{background:0 0;border:none;padding:0.5rem 1rem;font-size:0.95rem;cursor:pointer;border-radius:30px;font-weight:500;color:#4a627a}.tab-button.active{background:#2c5a8c;color:#fff}.tab-content{display:none}.tab-content.active{display:block}
+.phases-accordion{display:flex;flex-direction:column;gap:12px}.phase-day-card{background:#f8f9fa;border-radius:16px;border:1px solid #e2e8f0;overflow:hidden}.phase-day-header{background:#eef2f7;padding:12px 16px;cursor:pointer;font-weight:bold;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}.phase-day-header .day-name{font-size:1.1rem;color:#1e466e}.phase-day-header .day-tips{font-size:0.85rem;color:#2c5a8c;background:rgba(44,90,140,0.1);padding:4px 12px;border-radius:20px}.phase-day-header .toggle-icon{font-size:1.2rem;transition:transform 0.2s}.phase-day-content{padding:0 16px;max-height:0;overflow:hidden;transition:max-height 0.3s ease-out;background:#fff}.phase-day-card.open .phase-day-content{max-height:2000px;padding:12px 16px}.phase-day-card.open .toggle-icon{transform:rotate(180deg)}
+.phase-table-wrapper{overflow-x:auto;margin-bottom:12px}.phase-table{width:100%;border-collapse:collapse;font-size:0.85rem;min-width:600px}.phase-table th{background:#2c5a8c;color:#fff;padding:8px;text-align:left}.phase-table td{padding:8px;border-bottom:1px solid #e2e8f0;vertical-align:top}
+.row-collab-boy td:first-child,.row-collab-boy td { background-color: #e6f3ff; }
+.row-collab-build td:first-child,.row-collab-build td { background-color: #e6ffe6; }
+.row-collab-research td:first-child,.row-collab-research td { background-color: #fff0e6; }
+.row-collab-hero td:first-child,.row-collab-hero td { background-color: #ffe6f0; }
+.row-collab-train td:first-child,.row-collab-train td { background-color: #f0f0ff; }
+.timer-cell{font-family:monospace;font-weight:bold}.timer-cell.urgent{background-color:#ffcccc;color:#a00}
+.day-instruction{margin-top:12px;border-top:1px dashed #ccc;padding-top:10px}.instruction-toggle{background:0 0;border:none;color:#2c5a8c;cursor:pointer;font-size:0.85rem;font-weight:500;padding:4px 0;display:flex;align-items:center;gap:5px}.instruction-content{max-height:0;overflow:hidden;transition:max-height 0.3s ease;background:#fef9e6;border-radius:12px;margin-top:8px;font-size:0.85rem}.instruction-content.show{max-height:500px;padding:10px 12px}.instruction-content ul{margin:5px 0;padding-left:20px}
+.guides-container{display:flex;flex-direction:column;gap:20px}.guide-card{background:#f8f9fa;border-radius:16px;border-left:5px solid #2c5a8c;overflow:hidden}.guide-header{background:#eef2f7;padding:12px 16px;cursor:pointer;font-weight:bold;display:flex;justify-content:space-between;align-items:center}.guide-header span:first-child{font-size:1rem;color:#1e466e}.guide-content{padding:0 16px;max-height:0;overflow:hidden;transition:max-height 0.3s ease-out;background:#fff}.guide-card.open .guide-content{max-height:2000px;padding:12px 16px}.guide-card.open .guide-header .toggle-icon{transform:rotate(180deg)}.guide-content h4{margin:0 0 8px 0;color:#1e466e}.guide-content ul{margin:5px 0;padding-left:20px}.guide-content p{margin:8px 0}
+.calculator{background:#fff;border-radius:20px;padding:1.5rem;box-shadow:0 4px 12px rgba(0,0,0,0.05)}.calculator-header{display:flex;justify-content:space-between;align-items:center;cursor:pointer;margin-bottom:0.5rem}.calculator-header h2{margin:0;font-size:1.3rem}.calc-body{overflow:hidden;transition:max-height 0.3s ease-out}.calc-body.collapsed{max-height:0 !important;padding:0;margin:0}.start-time{display:flex;flex-wrap:wrap;gap:0.8rem;align-items:center;margin-bottom:1rem;background:#f8f9fa;padding:1rem;border-radius:16px}.start-time label{display:flex;align-items:center;gap:0.5rem;background:#fff;padding:0.3rem 1rem;border-radius:40px;box-shadow:0 1px 3px rgba(0,0,0,0.1);font-size:0.9rem}.start-time input{width:60px;padding:0.3rem;border:1px solid #ccc;border-radius:20px;text-align:center}.mode{display:flex;gap:1.5rem;margin-bottom:1rem;background:#f8f9fa;padding:0.6rem;border-radius:40px;justify-content:center}.add-item{background:#f8f9fa;padding:1rem;border-radius:16px;margin-bottom:1rem;display:flex;flex-wrap:wrap;gap:1rem;align-items:flex-end}.add-item label{display:flex;flex-direction:column;font-size:0.75rem;color:#4a627a}.add-item input,.add-item select{margin-top:0.3rem;padding:0.4rem;border-radius:12px;border:1px solid #ccc;width:100px}.add-item button{background:#2c5a8c;color:#fff;border:none;padding:0.4rem 0.8rem;border-radius:40px;cursor:pointer;font-weight:bold;font-size:0.85rem}.items-list ul{list-style:none;padding:0;max-height:150px;overflow-y:auto;border:1px solid #e2e8f0;border-radius:16px;background:#fff;margin:0}.items-list li{padding:0.5rem 1rem;cursor:pointer;border-bottom:1px solid #e2e8f0;font-size:0.85rem}.items-list li.selected{background:#e3f2fd;border-left:4px solid #2c5a8c}.result{font-size:1.2rem;font-weight:bold;background:#eef2f7;padding:0.8rem;border-radius:20px;text-align:center;margin:1rem 0}.reset-btn{background:#dc3545;color:#fff;border:none;padding:0.5rem 1rem;border-radius:40px;cursor:pointer;font-weight:bold;width:100%}
+@media (max-width:768px){body{padding:10px}.start-time,.add-item,.mode{flex-direction:column;align-items:stretch}.add-item input,.add-item select{width:100%}.time-stats{flex-direction:column;gap:0.5rem}.phase-table th,.phase-table td{font-size:0.75rem;padding:6px}}.small-note{font-size:0.7rem;color:#6c757d;margin-top:1rem;text-align:center}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Z Route: Redemption</h1>
+<div class="time-panel" id="timePanel"><div class="time-panel-header" id="toggleTimePanel"><div class="next-event" id="nextEvent">➡ Загрузка...</div><button class="toggle-panel-btn" id="collapseTimeBtn">☰</button></div><div class="time-content" id="timeContent"><div class="time-stats"><div>🕒 Текущее время: <span id="currentTime"></span></div><div>📅 Игровой день: <span id="gameDay"></span></div><div>⏳ До конца дня: <span id="untilReset"></span></div></div></div></div>
+<div class="references"><div class="tabs"><button class="tab-button active" data-tab="phases">📅 Расписание фаз</button><button class="tab-button" data-tab="upgrades">🏗️ Условия улучшений</button><button class="tab-button" data-tab="calendar">🗓️ Календарь событий</button><button class="tab-button" data-tab="guides">📖 Инструкции</button><button class="tab-button" data-tab="training">🎬 Обучение</button></div>
+<div class="tab-content active" id="tab-phases"><div id="phasesContainer" class="phases-accordion"></div></div>
+<div class="tab-content" id="tab-upgrades"><div class="table-wrapper" style="overflow-x:auto;"><table id="upgradesTable" style="min-width:400px;"><thead>   —<th>Уровень</th><th>Условие 1</th><th>Условие 2</th> </thead><tbody></tbody> </table></div></div>
+<div class="tab-content" id="tab-calendar"><div class="table-wrapper" style="overflow-x:auto;"><table id="calendarTable" style="min-width:400px;"><thead>   <th>День</th><th>Время</th><th>Событие</th> </thead><tbody></tbody> </table></div></div>
+<div class="tab-content" id="tab-guides"><div class="guides-container" id="guidesContainer"></div></div>
+<div class="tab-content" id="tab-training"><div style="display:flex;flex-wrap:wrap;gap:20px;justify-content:center;"><div style="background:#f8f9fa;border-radius:16px;padding:1rem;width:300px;text-align:center;"><video controls style="width:100%;border-radius:12px;"><source src="videos/tutorial1.mp4" type="video/mp4"></video><h4 style="margin:0.5rem 0;">Как использовать ускорители</h4></div><div style="background:#f8f9fa;border-radius:16px;padding:1rem;width:300px;text-align:center;"><video controls style="width:100%;border-radius:12px;"><source src="videos/tutorial2.mp4" type="video/mp4"></video><h4>Стратегия прокачки базы</h4></div><div style="background:#f8f9fa;border-radius:16px;padding:1rem;width:300px;text-align:center;"><video controls style="width:100%;border-radius:12px;"><source src="videos/tutorial3.mp4" type="video/mp4"></video><h4>События радара: секреты</h4></div></div></div></div>
+<div class="calculator"><div class="calculator-header" id="toggleCalculator"><h2>🧮 Сумматор времени</h2><span class="toggle-icon" id="calcToggleIcon">▼</span></div><div class="calc-body" id="calcBody"><div class="start-time"><label>Дни <input type="number" id="startDays" value="0" min="0"></label><label>Часы <input type="number" id="startHours" value="0" min="0" max="23"></label><label>Минуты <input type="number" id="startMinutes" value="0" min="0" max="59"></label><label>Секунды <input type="number" id="startSeconds" value="0" min="0" max="59"></label><button id="resetStartBtn">Сбросить начало</button></div><div class="mode"><label><input type="radio" name="mode" value="add" checked> ➕ Прибавить</label><label><input type="radio" name="mode" value="subtract"> ➖ Вычесть</label></div><div class="add-item"><label>Количество <input type="number" id="itemQty" value="1" min="1"></label><label>Длительность<select id="durationSelect"><option value="1">1 минута</option><option value="5">5 минут</option><option value="60">1 час</option><option value="240">4 часа</option><option value="480">8 часов</option></select></label><button id="addItemBtn">➕ Добавить</button><button id="editItemBtn">✏️ Редактировать</button><button id="delItemBtn">🗑️ Удалить</button></div><div class="items-list"><div style="font-weight:bold;margin-bottom:4px;">📦 Предметы (клик для выбора):</div><ul id="itemsList"></ul></div><div class="result" id="resultTime">0 дн 0 ч 0 мин 0 сек</div><button class="reset-btn" id="resetAllBtn">Сбросить всё</button></div></div>
+</div>
+<script>
+document.addEventListener('contextmenu', e => e.preventDefault());
+document.addEventListener('keydown', e => { if (e.ctrlKey && (e.key === 'u' || e.key === 's' || e.key === 'c' || e.key === 'i' || e.key === 'j')) e.preventDefault(); });
+const calendarData = [
+    ["День 1","09:00:00","Строительство Базы"],["День 1","13:00:00","Обучить Солдат"],["День 1","17:00:00","Исследования технологий"],["День 1","21:00:00","Улучшение бойца"],["День 1","01:00:00","Улучшение Героя"],["День 1","05:00:00","Строительство Базы"],
+    ["День 2","09:00:00","Улучшение Героя"],["День 2","13:00:00","Строительство Базы"],["День 2","17:00:00","Обучить Солдат"],["День 2","21:00:00","Исследования технологий"],["День 2","01:00:00","Улучшение бойца"],["День 2","05:00:00","Улучшение Героя"],
+    ["День 3","09:00:00","Строительство Базы"],["День 3","13:00:00","Обучить Солдат"],["День 3","17:00:00","Исследования технологий"],["День 3","21:00:00","Улучшение бойца"],["День 3","01:00:00","Улучшение Героя"],["День 3","05:00:00","Строительство Базы"],
+    ["День 4","09:00:00","Обучить Солдат"],["День 4","13:00:00","Исследования технологий"],["День 4","17:00:00","Улучшение бойца"],["День 4","21:00:00","Улучшение Героя"],["День 4","01:00:00","Строительство Базы"],["День 4","05:00:00","Обучить Солдат"],
+    ["День 5","09:00:00","Исследования технологий"],["День 5","13:00:00","Улучшение бойца"],["День 5","17:00:00","Улучшение Героя"],["День 5","21:00:00","Строительство Базы"],["День 5","01:00:00","Обучить Солдат"],["День 5","05:00:00","Исследования технологий"],
+    ["День 6","09:00:00","Улучшение бойца"],["День 6","13:00:00","Улучшение Героя"],["День 6","17:00:00","Строительство Базы"],["День 6","21:00:00","Обучить Солдат"],["День 6","01:00:00","Исследования технологий"],["День 6","05:00:00","Улучшение бойца"],
+    ["День 7","09:00:00","Улучшение Героя"],["День 7","13:00:00","Строительство Базы"],["День 7","17:00:00","Обучить Солдат"],["День 7","21:00:00","Исследования технологий"],["День 7","01:00:00","Улучшение бойца"],["День 7","05:00:00","Улучшение Героя"]
+];
+const phasesRaw = [
+    ["Воскресенье","-","","","","События радара (Копим на завтра). Отправляем в ночь отряды на сбор ресурсов."],
+    ["Понедельник","Фаза 1. Радар","09:00-13:00","Завершить событие Радара","Улучшение бойца","Сбор ресурсов весь день"],["","","13:00-17:00","Использовать 1 Часть бойца","Улучшение бойца",""],["","","17:00-21:00","Использовать 1 Боевой чип","Улучшение бойца",""],["","","21:00-01:00","Потратить 1 Выносливость","Улучшение бойца",""],["","","01:00-05:00","Использовать 660 опыта Героя","Улучшение героя","Приберечь для фазы героя"],["","","05:00-09:00","Сбор 100 ед. ресурсов","","Сразу отправлять повторно"],
+    ["Вторник","Фаза 2. Строительство","09:00-13:00","Использовать 1 минуту ускорения постройки","Строить Базу","Только за завершенную постройку"],["","","13:00-17:00","Завершить постройку за +1 Мощь","Строить Базу",""],["","","17:00-21:00","Выполнить 1 оранжевую миссию","","Используй жетоны"],["","","21:00-01:00","Отправить 1 Легендарный Транспортник","","Используй Контракт конвоя"],["","","01:00-05:00","","","События радара (Копим на завтра)"],
+    ["Среда","Фаза 3. Технологии","09:00-13:00","Завершить событие Радара","Исследование технологий",""],["","","13:00-17:00","Использовать 1 минуту ускорения исследования","Исследование технологий",""],["","","17:00-21:00","Завершить исследование за +1 Силу","Исследование технологий","Только за завершенное исследование"],["","","21:00-01:00","Потратить 1 Научные данные","",""],["","","01:00-05:00","Открыть сундук с компонентами бойца","",""],
+    ["Четверг","Фаза 4. Герой","09:00-13:00","Использовать 660 опыта Героя","Улучшение героя",""],["","","13:00-17:00","Использовать карту найма героя","Улучшение героя","Используем первым"],["","","17:00-21:00","Фрагмент героя или универс. (Мифический)","",""],["","","21:00-01:00","Фрагмент героя или универс. (Эпический)","",""],["","","01:00-05:00","Фрагмент героя или универс. (Редкий)","",""],["","","05:00-09:00","Использовать книгу навыков","",""],["","","","","","События радара (Копим на завтра)"],
+    ["Пятница","Фаза 5. Боеготовность","09:00-13:00","Завершить событие Радара","Строить Базу",""],["","","13:00-17:00","Использовать 1 минуту ускорения постройки","Строить Базу",""],["","","17:00-21:00","Завершить постройку за +1 Мощь","Строить Базу",""],["","","21:00-01:00","Использовать 1 минуту ускорения исследования","Исследование технологий",""],["","","01:00-05:00","Завершить исследование за +1 Силу","Исследование технологий",""],["","","05:00-09:00","Использовать 1 минуту ускорения тренировок","Подготовка солдат",""],["","","","Обучить солдат","Подготовка солдат","Очки сразу"],
+    ["Суббота","Фаза 6. Рейд","09:00-13:00","Использовать 1 минуту ускорения постройки","Улучшение бойца",""],["","","13:00-17:00","Использовать 1 минуту ускорения исследования","Улучшение Героя",""],["","","17:00-21:00","Использовать 1 минуту ускорения тренировок","Строительство Базы",""],["","","21:00-01:00","Использовать 1 минуту ускорения лечения","Обучить Солдат",""],["","","01:00-05:00","Убийство солдат противника","Исследования технологий",""],["","","05:00-09:00","Смерть своих солдат","Улучшение бойца",""]
+];
+const upgradesData = [
+    [1,"—","—"],[2,"Полигон (Ур.1)","Парковка (Ур.1)"],[3,"Линия обороны (Ур.2)","—"],[4,"Тренировочный лагерь солдат (Ур.3)","Полигон (Ур.3)"],[5,"Линия обороны (Ур.4)","Тренировочный лагерь солдат (Ур.4)"],[6,"Линия обороны (Ур.5)","Полигон (Ур.5)"],[7,"Линия обороны (Ур.6)","Центр подготовки (по классу) (Ур.6)"],[8,"Отдел альфа-исследований (Ур.7)","Центр альянса (Ур.7)"],[9,"Отдел альфа-исследований (Ур.8)","Центр подготовки (по классу) (Ур.8)"],[10,"Отдел альфа-исследований (Ур.9)","Госпиталь (Ур.9)"],[11,"Отдел альфа-исследований (Ур.10)","Линия обороны (Ур.10)"],[12,"Отдел альфа-исследований (Ур.11)","Тренировочный лагерь солдат (Ур.11)"],[13,"Отдел альфа-исследований (Ур.12)","Центр подготовки (по классу) (Ур.12)"],[14,"Отдел альфа-исследований (Ур.13)","Полигон (Ур.13)"],[15,"Отдел альфа-исследований (Ур.14)","Линия обороны (Ур.14)"],[16,"Отдел альфа-исследований (Ур.15)","Центр альянса (Ур.15)"],[17,"Отдел альфа-исследований (Ур.16)","Центр подготовки (по классу) (Ур.16)"],[18,"Отдел альфа-исследований (Ур.17)","Госпиталь (Ур.17)"],[19,"Отдел альфа-исследований (Ур.18)","Линия обороны (Ур.18)"],[20,"Отдел альфа-исследований (Ур.19)","Тренировочный лагерь солдат (Ур.19)"],[21,"Отдел альфа-исследований (Ур.20)","Центр подготовки (по классу) (Ур.20)"],[22,"Отдел альфа-исследований (Ур.21)","Полигон (Ур.21)"],[23,"Отдел альфа-исследований (Ур.22)","Линия обороны (Ур.22)"],[24,"Отдел альфа-исследований (Ур.23)","Центр альянса (Ур.23)"],[25,"Отдел альфа-исследований (Ур.24)","Центр подготовки (по классу) (Ур.24)"],[26,"Отдел альфа-исследований (Ур.25)","Госпиталь (Ур.25)"],[27,"Отдел альфа-исследований (Ур.26)","Линия обороны (Ур.26)"],[28,"Отдел альфа-исследований (Ур.27)","Тренировочный лагерь солдат (Ур.27)"],[29,"Отдел альфа-исследований (Ур.28)","Центр подготовки (по классу) (Ур.28)"],[30,"Отдел альфа-исследований (Ур.29)","Полигон (Ур.29)"]
+];
+function getGameDay() { const d=new Date().getDay(); const m={0:1,1:2,2:3,3:4,4:5,5:6,6:7}; return m[d]; }
+function formatTime(s){ if(s<0)s=0; const d=Math.floor(s/86400); s%=86400; const h=Math.floor(s/3600); s%=3600; const m=Math.floor(s/60); const sec=s%60; return `${d} дн ${h} ч ${m} мин ${sec} сек`; }
+function getNextEventForCollab(collab){
+    if(!collab) return null;
+    let pat="";
+    if(collab.includes("Улучшение бойца")) pat="Улучшение бойца";
+    else if(collab.includes("Строить Базу")||collab.includes("Строительство Базы")) pat="Строительство Базы";
+    else if(collab.includes("Исследование технологий")||collab.includes("Исследования технологий")) pat="Исследования технологий";
+    else if(collab.includes("Улучшение героя")||collab.includes("Улучшение Героя")) pat="Улучшение Героя";
+    else if(collab.includes("Подготовка солдат")||collab.includes("Обучить Солдат")) pat="Обучить Солдат";
+    else return null;
+    const now=new Date(); const gd=getGameDay(); let best=Infinity;
+    for(let [d,t,e] of calendarData){
+        if(!e.includes(pat)) continue;
+        const dn=parseInt(d.split(" ")[1]), [h,m,s]=t.split(":").map(Number);
+        let dt=new Date(now); dt.setHours(h,m,s,0);
+        let ahead=(dn-gd+7)%7; dt.setDate(now.getDate()+ahead);
+        if(ahead===0 && dt<=now) dt.setDate(now.getDate()+7);
+        const diff=dt-now;
+        if(diff>0 && diff<best) best=diff;
+    }
+    if(best!==Infinity){ const ts=Math.floor(best/1000); return {hours:Math.floor(ts/3600), minutes:Math.floor((ts%3600)/60), seconds:ts%60, totalSec:ts}; }
+    return null;
+}
+function getCollabClass(collab){
+    if(!collab) return "";
+    if(collab.includes("Улучшение бойца")) return "row-collab-boy";
+    if(collab.includes("Строить Базу")||collab.includes("Строительство Базы")) return "row-collab-build";
+    if(collab.includes("Исследование технологий")||collab.includes("Исследования технологий")) return "row-collab-research";
+    if(collab.includes("Улучшение героя")||collab.includes("Улучшение Героя")) return "row-collab-hero";
+    if(collab.includes("Подготовка солдат")||collab.includes("Обучить Солдат")) return "row-collab-train";
+    return "";
+}
+function buildPhasesAccordion(){
+    const cont=document.getElementById("phasesContainer"); cont.innerHTML="";
+    let groups=[], last="";
+    for(let r of phasesRaw){
+        const day=r[0]||last; if(r[0]) last=day;
+        let g=groups.find(g=>g.day===day); if(!g){ g={day,rows:[]}; groups.push(g); }
+        g.rows.push({phase:r[1],time:r[2],points:r[3],collab:r[4],comment:r[5]});
+    }
+    groups.forEach(g=>{
+        const card=document.createElement("div"); card.className="phase-day-card";
+        const header=document.createElement("div"); header.className="phase-day-header";
+        const daySpan=document.createElement("span"); daySpan.className="day-name"; daySpan.innerText=g.day;
+        const tips=document.createElement("span"); tips.className="day-tips";
+        if(g.day==="Воскресенье") tips.innerText="📡 Копим радар, отправляем в ночь";
+        else if(g.day==="Понедельник") tips.innerText="🎯 Радар + сбор ресурсов";
+        else if(g.day==="Вторник") tips.innerText="🏗️ Стройка, оранжевые миссии";
+        else if(g.day==="Среда") tips.innerText="🔬 Технологии, научные данные";
+        else if(g.day==="Четверг") tips.innerText="🦸 Герои, опыт, карты";
+        else if(g.day==="Пятница") tips.innerText="⚔️ Боеготовность: стройка, учёба";
+        else if(g.day==="Суббота") tips.innerText="🏆 Рейд, ускорения, бои";
+        else tips.innerText="💡 Следуй расписанию";
+        const icon=document.createElement("span"); icon.className="toggle-icon"; icon.innerText="▼";
+        header.appendChild(daySpan); header.appendChild(tips); header.appendChild(icon);
+        header.onclick=()=>{ card.classList.toggle("open"); const i=header.querySelector(".toggle-icon"); i.innerText=card.classList.contains("open")?"▲":"▼"; };
+        const content=document.createElement("div"); content.className="phase-day-content";
+        const wrap=document.createElement("div"); wrap.className="phase-table-wrapper";
+        const table=document.createElement("table"); table.className="phase-table";
+        table.innerHTML="<thead> <th>Время</th><th>Начисление</th><th>Коллаба</th><th>Комментарий</th><th>До события</th> </thead><tbody></tbody>";
+        const tbody=table.querySelector("tbody");
+        g.rows.forEach(r=>{
+            const tr=document.createElement("tr");
+            const collabClass=getCollabClass(r.collab);
+            if(collabClass) tr.className=collabClass;
+            tr.innerHTML=`<td>${r.time||""}</td><td>${r.points||""}</td><td>${r.collab||""}</td><td>${r.comment||""}</td><td class="timer-cell" data-collab="${r.collab||""}">--</td>`;
+            tbody.appendChild(tr);
+        });
+        wrap.appendChild(table); content.appendChild(wrap);
+        const instDiv=document.createElement("div"); instDiv.className="day-instruction";
+        const instBtn=document.createElement("button"); instBtn.className="instruction-toggle"; instBtn.innerHTML="📖 Показать инструкцию";
+        const instCont=document.createElement("div"); instCont.className="instruction-content";
+        let instText="";
+        if(g.day==="Воскресенье") instText="<ul><li>Не выполняйте задания радара — копите к понедельнику.</li><li>Отправьте отряды в ночь на сбор ресурсов.</li><li>Подготовьте выносливость и банки с энергией.</li></ul>";
+        else if(g.day==="Понедельник") instText="<ul><li>Сразу выполните накопленные задания радара.</li><li>Используйте части бойцов, боевые чипы, выносливость.</li><li>Постоянно отправляйте отряды на сбор ресурсов.</li></ul>";
+        else if(g.day==="Вторник") instText="<ul><li>Заранее начните стройки, чтобы они завершились в этот день.</li><li>Используйте ускорения постройки.</li><li>Выполните оранжевую миссию и отправьте легендарный транспортник.</li></ul>";
+        else if(g.day==="Среда") instText="<ul><li>Не тратьте ускорения исследований всю неделю — используйте только сегодня.</li><li>Закройте все доступные события радара.</li><li>Откройте накопленные сундуки с компонентами бойца.</li></ul>";
+        else if(g.day==="Четверг") instText="<ul><li>Используйте опыт героя, карты найма (первыми).</li><li>Тратьте фрагменты героев (мифические → эпические → редкие).</li><li>Примените книги навыков.</li></ul>";
+        else if(g.day==="Пятница") instText="<ul><li>Совмещайте ускорения постройки, исследований и тренировок.</li><li>Обучайте солдат в интервалы, когда дают очки.</li></ul>";
+        else if(g.day==="Суббота") instText="<ul><li>Используйте оставшиеся ускорения всех типов.</li><li>Участвуйте в рейдах, убивайте солдат противника.</li><li>Не бойтесь потерь — они тоже дают очки.</li></ul>";
+        else instText="<ul><li>Следуйте расписанию фаз.</li></ul>";
+        instCont.innerHTML=instText;
+        instBtn.onclick=()=>{ instCont.classList.toggle("show"); instBtn.innerHTML=instCont.classList.contains("show")?"📖 Скрыть инструкцию":"📖 Показать инструкцию"; };
+        instDiv.appendChild(instBtn); instDiv.appendChild(instCont); content.appendChild(instDiv);
+        card.appendChild(header); card.appendChild(content); cont.appendChild(card);
+    });
+}
+function updatePhaseTimers(){
+    document.querySelectorAll(".timer-cell").forEach(cell=>{
+        const c=cell.dataset.collab;
+        if(!c){ cell.innerText=""; cell.classList.remove("urgent"); return; }
+        const t=getNextEventForCollab(c);
+        if(t){ cell.innerText=`${t.hours}ч ${t.minutes}м ${t.seconds}с`; if(t.totalSec<3600) cell.classList.add("urgent"); else cell.classList.remove("urgent"); }
+        else{ cell.innerText="—"; cell.classList.remove("urgent"); }
+    });
+}
+function buildGuides(){
+    const cont=document.getElementById("guidesContainer");
+    const guides=[
+        {title:"📡 Фаза 1: Радар — подготовка и старт", content:`<h4>Описание события</h4><p>Очки начисляются за: выполнение заданий Радара, трату выносливости, использование опыта героя, сбор ресурсов, использование боевых чипов и частей бойца.</p><h4>Подготовка (за день)</h4><ul><li>Накопите 30–35 заданий радара (не трогайте 18 часов).</li><li>Держите полную выносливость + банки в инвентаре.</li><li>Опыт героя не тратьте — приберегите для фазы Героя.</li><li>Отправьте отряды на ресурсы так, чтобы сбор завершился после 05:00 МСК.</li><li>Копите боевые чипы и части бойца всю неделю.</li></ul><h4>Старт фазы</h4><ul><li>Сразу выполните накопленные задания радара.</li><li>Используйте выносливость, части бойцов, боевые чипы.</li><li>Постоянно отправляйте отряды на сбор ресурсов.</li><li>Совмещайте с событием «Готовность к миссии» для двойной выгоды.</li></ul>`},
+        {title:"🏗️ Фаза 2: Строительство — призрачная стройка", content:`<h4>Описание события</h4><p>Очки дают: ускорения постройки, завершение построек (+Мощь), оранжевые миссии, отправка легендарных транспортников.</p><h4>Подготовка</h4><ul><li>«Призрачная стройка»: начните улучшать здания за несколько дней, чтобы они завершились после старта фазы.</li><li>Не тратьте ускорения постройки всю неделю.</li><li>Копите ресурсы для нескольких построек.</li></ul><h4>Старт фазы</h4><ul><li>Завершите заранее начатые стройки → получите очки за мощь.</li><li>Запросите титул Министра строительства.</li><li>Используйте накопленные ускорения постройки.</li><li>Выполните оранжевую миссию (жетоны) и отправьте легендарный транспортник (контракты конвоя).</li><li>Совмещайте с ивентом «Готовность к миссии».</li></ul>`},
+        {title:"🔬 Фаза 3: Технологии — экономия и вливание", content:`<h4>Главная стратегия</h4><p>Экономить ускорения исследований и научные данные всю неделю, вливать строго в среду.</p><h4>Подготовка</h4><ul><li>Определите, какие исследования планируете закрыть.</li><li>Оцените запасы ускорений и научных данных.</li><li>Не тратьте их в другие дни.</li></ul><h4>Старт фазы</h4><ul><li>Закройте все доступные события на радаре.</li><li>Используйте ускорения исследований и завершайте самые долгие технологии.</li><li>Потратьте научные данные.</li><li>Откройте накопленные сундуки с компонентами бойца.</li><li>Запросите должность Министра науки.</li></ul>`},
+        {title:"🦸 Фаза 4: Герой — полное руководство", content:`<h4>Подготовка</h4><ul><li>Копите опыт героя, карты найма, фрагменты героев и книги навыков в течение недели.</li><li>Не тратьте их на ежедневных заданиях.</li></ul><h4>Старт фазы</h4><ul><li>Используйте карты найма героя первыми — есть шанс получить фрагменты.</li><li>Потратьте накопленный опыт героя (660 единиц дают очки).</li><li>Используйте фрагменты героев: мифические → эпические → редкие.</li><li>Примените книги навыков.</li><li>Совмещайте с ивентом «Готовность к миссии».</li></ul>`},
+        {title:"⚔️ Фаза 5: Боеготовность — совмещение ускорений", content:`<h4>Подготовка</h4><ul><li>Копите ускорения постройки, исследований и тренировок.</li><li>Заранее подготовьте солдат для обучения.</li></ul><h4>Старт фазы</h4><ul><li>Используйте ускорения постройки и завершайте стройки.</li><li>Используйте ускорения исследований и завершайте исследования.</li><li>Используйте ускорения тренировок и начинайте обучение солдат (очки начисляются сразу после начала).</li><li>Старайтесь совмещать с ивентом «Готовность к миссии» (Строительство, Исследования, Подготовка солдат).</li></ul>`},
+        {title:"🏆 Фаза 6: Рейд — безопасная война", content:`<h4>Подготовка</h4><ul><li>Накануне купите щит (8/12/24ч) и активируйте его с расчётом на начало фазы в 05:00 МСК.</li><li>Уберите галочку «Вступить в оборону» в гарнизоне, чтобы не потерять войска при атаке.</li><li>Ресурсы держите в инвентаре, тратьте на стройку/исследования, оставляйте минимум на лечение.</li><li>Перед началом вылечите всех и освободите госпиталь.</li></ul><h4>Во время рейда</h4><ul><li>Разведывайте цели: ищите базы с ресурсами, ослабленных игроков.</li><li>Атакуйте, но не обнуляйте базу, если игрок не сопротивляется.</li><li>Следите за HP своей базы — если стена разрушится, вы потеряете ресурсы и ~5000 солдат, будете телепортированы.</li><li>Не телепортируйтесь в лагерь во время боя — противник вычислит и ударит, пока действует кулдаун на щит.</li></ul>`},
+        {title:"🔥 Битва Серверов (Безумие экспедиции)", content:`<h4>Две стадии</h4><ul><li>Подготовка (вс–пт): набирайте очки в VS, Пандоре, по урону по боссу. Победитель недели становится атакующим в субботу.</li><li>Суббота — день войны. Атакующие летят на чужой сервер, защитники обороняются.</li></ul><h4>Тактика для новичков (атакующая сторона)</h4><ul><li>Атакуйте только базы без щита, с ресурсами, но не обнуляйте.</li><li>Если на вас напали — используйте телепорт в безопасное место.</li><li>Не храните ресурсы на базе — они будут украдены.</li></ul><h4>Стратегия для сильных бойцов</h4><ul><li>Координируйтесь с альянсом для захвата столицы и батарей.</li><li>Помогайте китам сервера.</li><li>Перед боями израсходуйте ресурсы, чтобы не кормить врага.</li></ul><p><strong>Главное правило:</strong> если не уверены в своих силах — держите щит и помогайте серверу не давать очков врагу.</p>`},
+        {title:"🎯 Готовность к миссии: 18 сундуков без затрат", content:`<h4>Три золотых события</h4><h4>1. Обучение солдат</h4><ul><li>Запросите должность Министра обороны (+20% скорость, +20% лимит).</li><li>Перед событием лагеря должны быть пусты.</li><li>Хитрость: тренируйте войска низкого тира (Т6), а затем улучшайте их до максимального (Т8) — переобучение даёт много очков при меньших затратах ускорений.</li><li>Оставшееся время ставьте тренировку новых войск так, чтобы они приготовились к следующему ивенту.</li></ul><h4>2. Улучшение бойца</h4><ul><li>Просто тратьте энергию (около 300 ед.).</li><li>Копите энергию под час события, используйте бесплатное восстановление 2 раза (за 10 минут до и через ~3,5 часа).</li><li>Не хватающую часть добивайте банками.</li></ul><h4>3. Улучшение героя</h4><ul><li>Используйте накопленный опыт и книги навыков — закрывается очень быстро.</li></ul><p><strong>Важно:</strong> стройку и науку в этом ивенте не трогайте, оставьте ускорения для фаз Битвы Альянсов.</p>`},
+        {title:"🚑 Бесплатное лечение войск", content:`<h4>Главное правило</h4><p>Лечите войска небольшими пачками, которые альянс может закрыть «рукопожатиями» (помощью).</p><h4>Пошагово</h4><ul><li>Узнайте максимальное время, которое может сократить ваша помощь (зависит от уровня Центра помощи).</li><li>Оцените реальный онлайн альянса (активных игроков).</li><li>Рассчитайте оптимальное время лечения: [онлайн] × [коэффициент активности 0.7–0.9] × [время 1 помощи].</li><li>Запустите лечение именно на это время, запросите помощь — и пока солдаты лечатся, помощь успеет сократить время до 0.</li><li>Игра запоминает ползунок — в следующий раз не нужно будет настраивать.</li></ul><p>Если лечение слишком долгое — уменьшайте пачку, если моментальное — можно чуть увеличить.</p>`}
+    ];
+    cont.innerHTML="";
+    guides.forEach(g=>{
+        const card=document.createElement("div"); card.className="guide-card";
+        const head=document.createElement("div"); head.className="guide-header";
+        head.innerHTML=`<span>${g.title}</span><span class="toggle-icon">▼</span>`;
+        const body=document.createElement("div"); body.className="guide-content"; body.innerHTML=g.content;
+        head.onclick=()=>{ card.classList.toggle("open"); const ic=head.querySelector(".toggle-icon"); ic.innerText=card.classList.contains("open")?"▲":"▼"; };
+        card.appendChild(head); card.appendChild(body); cont.appendChild(card);
+    });
+}
+function findNextEvent(){
+    const now=new Date(); const gd=getGameDay(); let bestDelta=Infinity, bestEvent=null;
+    for(let [d,t,e] of calendarData){
+        const dn=parseInt(d.split(" ")[1]), [h,m,s]=t.split(":").map(Number);
+        let dt=new Date(now); dt.setHours(h,m,s,0);
+        let ahead=(dn-gd+7)%7; dt.setDate(now.getDate()+ahead);
+        if(ahead===0 && dt<=now) dt.setDate(now.getDate()+7);
+        const diff=dt-now;
+        if(diff>0 && diff<bestDelta){ bestDelta=diff; bestEvent={name:e,delta:diff}; }
+    }
+    if(bestEvent){ const ts=Math.floor(bestEvent.delta/1000); return {name:bestEvent.name, hours:Math.floor(ts/3600), minutes:Math.floor((ts%3600)/60), seconds:ts%60}; }
+    return null;
+}
+function updateTimePanel(){
+    const now=new Date();
+    document.getElementById("currentTime").innerText=now.toLocaleString("ru-RU");
+    document.getElementById("gameDay").innerText="День "+getGameDay();
+    const tom9=new Date(now); tom9.setDate(now.getDate()+1); tom9.setHours(9,0,0,0);
+    let diff=Math.max(0,(tom9-now)/1000);
+    document.getElementById("untilReset").innerText=`${Math.floor(diff/3600)} ч ${Math.floor((diff%3600)/60)} мин ${Math.floor(diff%60)} сек`;
+    const nxt=findNextEvent();
+    if(nxt) document.getElementById("nextEvent").innerHTML=`➡ До события "${nxt.name}" осталось: ${nxt.hours} ч ${nxt.minutes} мин ${nxt.seconds} сек`;
+    else document.getElementById("nextEvent").innerHTML="➡ Нет ближайших событий";
+}
+let items=[], selectedIdx=-1;
+function getStartSec(){ return (parseInt(document.getElementById("startDays").value)||0)*86400+(parseInt(document.getElementById("startHours").value)||0)*3600+(parseInt(document.getElementById("startMinutes").value)||0)*60+(parseInt(document.getElementById("startSeconds").value)||0); }
+function updateResult(){
+    let total=0; for(let i of items) total+=i.quantity*i.durationMinutes*60;
+    let start=getStartSec(), mode=document.querySelector('input[name="mode"]:checked').value;
+    let end=mode==="add"?start+total:start-total; if(end<0) end=0;
+    document.getElementById("resultTime").innerText=formatTime(end);
+}
+function renderItems(){
+    const ul=document.getElementById("itemsList"); ul.innerHTML="";
+    items.forEach((it,i)=>{
+        let txt=""; if(it.durationMinutes===1) txt="1 минута"; else if(it.durationMinutes===5) txt="5 минут"; else if(it.durationMinutes===60) txt="1 час"; else if(it.durationMinutes===240) txt="4 часа"; else if(it.durationMinutes===480) txt="8 часов";
+        const li=document.createElement("li"); li.innerText=`${it.quantity} шт × ${txt}`;
+        li.onclick=()=>{ document.querySelectorAll("#itemsList li").forEach(l=>l.classList.remove("selected")); li.classList.add("selected"); selectedIdx=i; };
+        ul.appendChild(li);
+    });
+}
+function addItem(){
+    const q=parseInt(document.getElementById("itemQty").value), d=parseInt(document.getElementById("durationSelect").value);
+    if(isNaN(q)||q<=0){ alert("Количество >0"); return; }
+    items.push({quantity:q,durationMinutes:d}); renderItems(); updateResult();
+}
+function editItem(){
+    if(selectedIdx===-1){ alert("Выберите предмет"); return; }
+    const it=items[selectedIdx];
+    document.getElementById("itemQty").value=it.quantity; document.getElementById("durationSelect").value=it.durationMinutes;
+    items.splice(selectedIdx,1); selectedIdx=-1; renderItems(); updateResult();
+}
+function delItem(){
+    if(selectedIdx===-1){ alert("Выберите предмет"); return; }
+    items.splice(selectedIdx,1); selectedIdx=-1; renderItems(); updateResult();
+}
+function resetAll(){ items=[]; selectedIdx=-1; renderItems(); document.getElementById("startDays").value=0; document.getElementById("startHours").value=0; document.getElementById("startMinutes").value=0; document.getElementById("startSeconds").value=0; updateResult(); }
+function loadUpgrades(){
+    const tbody=document.querySelector("#upgradesTable tbody"); tbody.innerHTML="";
+    for(let r of upgradesData){ const tr=document.createElement("tr"); tr.innerHTML=`<td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td>`; tbody.appendChild(tr); }
+}
+function loadCalendar(){
+    const tbody=document.querySelector("#calendarTable tbody"); tbody.innerHTML="";
+    for(let r of calendarData){ const tr=document.createElement("tr"); tr.innerHTML=`<td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td>`; tbody.appendChild(tr); }
+}
+document.addEventListener("DOMContentLoaded",()=>{
+    buildPhasesAccordion(); buildGuides(); loadUpgrades(); loadCalendar(); updatePhaseTimers();
+    const timePanel=document.getElementById("timePanel"), collapseBtn=document.getElementById("collapseTimeBtn");
+    collapseBtn.addEventListener("click",()=>{ timePanel.classList.toggle("collapsed"); collapseBtn.innerText=timePanel.classList.contains("collapsed")?"☒":"☰"; });
+    const calcBody=document.getElementById("calcBody"), calcIcon=document.getElementById("calcToggleIcon"); let calcCollapsed=false;
+    document.getElementById("toggleCalculator").addEventListener("click",()=>{
+        if(calcCollapsed){ calcBody.style.maxHeight=calcBody.scrollHeight+"px"; calcIcon.innerText="▼"; setTimeout(()=>calcBody.style.maxHeight="none",300); }
+        else{ calcBody.style.maxHeight=calcBody.scrollHeight+"px"; setTimeout(()=>calcBody.style.maxHeight="0",10); calcIcon.innerText="▲"; }
+        calcCollapsed=!calcCollapsed;
+    }); calcBody.style.maxHeight="none";
+    document.getElementById("addItemBtn").onclick=addItem; document.getElementById("editItemBtn").onclick=editItem; document.getElementById("delItemBtn").onclick=delItem; document.getElementById("resetAllBtn").onclick=resetAll;
+    document.getElementById("resetStartBtn").onclick=()=>{ document.getElementById("startDays").value=0; document.getElementById("startHours").value=0; document.getElementById("startMinutes").value=0; document.getElementById("startSeconds").value=0; updateResult(); };
+    document.querySelectorAll("#startDays, #startHours, #startMinutes, #startSeconds").forEach(e=>e.addEventListener("input",updateResult));
+    document.querySelectorAll('input[name="mode"]').forEach(r=>r.addEventListener("change",updateResult));
+    updateResult(); updateTimePanel(); setInterval(updateTimePanel,1000); setInterval(updatePhaseTimers,1000);
+    const tabBtns=document.querySelectorAll(".tab-button"), tabs=document.querySelectorAll(".tab-content");
+    tabBtns.forEach(btn=>{ btn.addEventListener("click",()=>{ const tab=btn.dataset.tab; tabBtns.forEach(b=>b.classList.remove("active")); btn.classList.add("active"); tabs.forEach(t=>t.classList.remove("active")); document.getElementById(`tab-${tab}`).classList.add("active"); }); });
+});
+</script>
+</body>
+</html>
