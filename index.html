@@ -304,7 +304,7 @@
             border-bottom: 1px solid var(--border);
         }
         .score-table input {
-            width: 70px;
+            width: 100px;
             padding: 4px;
             border-radius: 12px;
             border: 1px solid var(--border);
@@ -389,8 +389,27 @@
         .score-progress {
             margin-top: 8px;
         }
-        .score-progress div {
-            font-size: 0.8rem;
+        .add-points {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-top: 8px;
+            justify-content: flex-end;
+        }
+        .add-points input {
+            width: 100px;
+            padding: 4px;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            text-align: center;
+        }
+        .add-points button {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 4px 12px;
+            border-radius: 20px;
+            cursor: pointer;
         }
         .upgrade-selector {
             background: var(--card);
@@ -631,12 +650,12 @@
                 <div class="vs-item"><label>🦸 Найм героев</label><input type="number" id="vs_hire" value="0" step="5" class="vs-bonus"></div>
                 <div class="vs-item"><label>⚡ Ускорение</label><input type="number" id="vs_speed" value="0" step="5" class="vs-bonus"></div>
                 <div class="vs-item"><label>💀 Убийство/потеря</label><input type="number" id="vs_kill" value="0" step="5" class="vs-bonus"></div>
-                <div class="vs-item"><label>✨ Общий</label><input type="number" id="vs_all" value="0" step="5" class="vs-bonus"></div>
+                <div class="vs-item"><label>✨ Общий (все действия)</label><input type="number" id="vs_all" value="0" step="5" class="vs-bonus"></div>
             </div>
-            <div class="small-note">* Оппа</div>
+            <div class="small-note">*Оппа</div>
         </div>
         <div id="scoreContainer"></div>
-        <div class="small-note">Теребятки.</div>
+        <div class="small-note">* Для опыта героя введите общее количество опыта (тыс.). Для ресурсов – общее количество (ед.). Очки пересчитываются автоматически.</div>
     </div>
 
     <div class="tab-content" id="tab-upgrades"><div id="upgradesContainer"></div></div>
@@ -645,7 +664,7 @@
             <table id="calendarTable" style="min-width:300px; width:100%; border-collapse:collapse;">
                 <thead><th>День</th><th>Время</th><th>Событие</th></thead>
                 <tbody></tbody>
-            </table>
+             </table>
         </div>
     </div>
     <div class="tab-content" id="tab-timecalc">
@@ -716,7 +735,7 @@
     <div class="tab-content" id="tab-guides">
         <div id="guidesContainer" class="guides-container"></div>
     </div>
-    <div class="small-note">Время локальное. Игровой день заканчивается в 09:00 следующего дня.</div>
+    <div class="small-note">Теребятки.</div>
 </div>
 
 <script>
@@ -737,7 +756,7 @@
         ["Воскресенье", "", "События радара (Копим на завтра)", "", "Отправляем в ночь отряды на сбор ресурсов.", ""],
         ["Понедельник", "Фаза 1. Радар", "Завершить событие Радара", "Улучшение бойца", "Сразу выполняйте накопленные задания радара.", "Улучшение бойца"],
         ["", "", "Использовать 1 Часть бойца", "Улучшение бойца", "Используйте части бойцов.", "Улучшение бойца"],
-        ["", "", "Использовать 1 Боевой чип", "Улучшение бойца", "Используйте боевые чипы.", "Улучшение бойца"],
+        ["", "", "Использовать 1 Боевой чип бойца", "Улучшение бойца", "Используйте боевые чипы.", "Улучшение бойца"],
         ["", "", "Потратить 1 Выносливость", "Улучшение бойца", "Тратьте выносливость на задания радара.", "Улучшение бойца"],
         ["", "", "Использовать 660 опыта Героя", "Улучшение героя", "Приберечь для фазы героя.", "Улучшение Героя"],
         ["", "", "Сбор 100 ед. ресурсов", "", "Как только отряды вернулись — сразу отправляйте их снова на сбор.", ""],
@@ -776,78 +795,6 @@
     const upgradesData = [
         [1,"—","—"],[2,"Полигон (Ур.1)","Парковка (Ур.1)"],[3,"Линия обороны (Ур.2)","—"],[4,"Тренировочный лагерь солдат (Ур.3)","Полигон (Ур.3)"],[5,"Линия обороны (Ур.4)","Тренировочный лагерь солдат (Ур.4)"],[6,"Линия обороны (Ур.5)","Полигон (Ур.5)"],[7,"Линия обороны (Ур.6)","Центр подготовки (по классу) (Ур.6)"],[8,"Отдел альфа-исследований (Ур.7)","Центр альянса (Ур.7)"],[9,"Отдел альфа-исследований (Ур.8)","Центр подготовки (по классу) (Ур.8)"],[10,"Отдел альфа-исследований (Ур.9)","Госпиталь (Ур.9)"],[11,"Отдел альфа-исследований (Ур.10)","Линия обороны (Ур.10)"],[12,"Отдел альфа-исследований (Ур.11)","Тренировочный лагерь солдат (Ур.11)"],[13,"Отдел альфа-исследований (Ур.12)","Центр подготовки (по классу) (Ур.12)"],[14,"Отдел альфа-исследований (Ур.13)","Полигон (Ур.13)"],[15,"Отдел альфа-исследований (Ур.14)","Линия обороны (Ур.14)"],[16,"Отдел альфа-исследований (Ур.15)","Центр альянса (Ур.15)"],[17,"Отдел альфа-исследований (Ур.16)","Центр подготовки (по классу) (Ур.16)"],[18,"Отдел альфа-исследований (Ур.17)","Госпиталь (Ур.17)"],[19,"Отдел альфа-исследований (Ур.18)","Линия обороны (Ур.18)"],[20,"Отдел альфа-исследований (Ур.19)","Тренировочный лагерь солдат (Ур.19)"],[21,"Отдел альфа-исследований (Ур.20)","Центр подготовки (по классу) (Ур.20)"],[22,"Отдел альфа-исследований (Ур.21)","Полигон (Ур.21)"],[23,"Отдел альфа-исследований (Ур.22)","Линия обороны (Ур.22)"],[24,"Отдел альфа-исследований (Ур.23)","Центр альянса (Ур.23)"],[25,"Отдел альфа-исследований (Ур.24)","Центр подготовки (по классу) (Ур.24)"],[26,"Отдел альфа-исследований (Ур.25)","Госпиталь (Ур.25)"],[27,"Отдел альфа-исследований (Ур.26)","Линия обороны (Ур.26)"],[28,"Отдел альфа-исследований (Ур.27)","Тренировочный лагерь солдат (Ур.27)"],[29,"Отдел альфа-исследований (Ур.28)","Центр подготовки (по классу) (Ур.28)"],[30,"Отдел альфа-исследований (Ур.29)","Полигон (Ур.29)"]
     ];
-
-    const scoreData = {
-        "Радар": [
-            { action: "Потратить 1 Выносливость", base: 150 },
-            { action: "Выполнить задание Радара", base: 10000 },
-            { action: "Использовать 660 опыта Героя", base: 1 },
-            { action: "Набор с алмазами [1 алмаз]", base: 30 },
-            { action: "Собрать 100 ед. еды", base: 20 },
-            { action: "Собрать 100 ед. металла", base: 20 },
-            { action: "Собрать 60 ед. нефти", base: 20 },
-            { action: "Использовать 1 Боевой чип бойца", base: 3 },
-            { action: "Использовать 1 Часть бойца", base: 2500 }
-        ],
-        "Строительство": [
-            { action: "Набор с алмазами [1 алмаз]", base: 30 },
-            { action: "За каждую минуту ускорения постройки", base: 60 },
-            { action: "За каждую постройку +1 Мощь", base: 10 },
-            { action: "Выполнить 1 оранжевую миссию Спецопераций", base: 75000 },
-            { action: "Отправить 1 Легендарный Транспортник", base: 100000 },
-            { action: "Провести 1 призыв выжившего", base: 1500 }
-        ],
-        "Технологии": [
-            { action: "Завершить событие Радара", base: 10000 },
-            { action: "Использовать 1 минуту ускорения исследования", base: 60 },
-            { action: "Завершить исследование за +1 Силу", base: 10 },
-            { action: "Потратить 1 Научные данные", base: 100 },
-            { action: "Открыть сундук с компонентами бойца", base: 500 }
-        ],
-        "Герой": [
-            { action: "Использовать 660 опыта Героя", base: 1 },
-            { action: "Набор с алмазами [1 алмаз]", base: 30 },
-            { action: "Нанять героя 1 раз", base: 1500 },
-            { action: "Использовать 1 Мифический Осколок Героя", base: 10000 },
-            { action: "Использовать 1 Эпический Осколок Героя", base: 3500 },
-            { action: "Использовать 1 Редкий Осколок Героя", base: 1000 },
-            { action: "Использовать 1 Книгу опыта навыков", base: 10 }
-        ],
-        "Боеготовность": [
-            { action: "Выполнить задание Радара", base: 10000 },
-            { action: "Набор с алмазами [1 алмаз]", base: 30 },
-            { action: "За каждую минуту ускорения постройки", base: 60 },
-            { action: "За каждую постройку +1 Мощь", base: 10 },
-            { action: "За каждую минуту ускорения исследований", base: 60 },
-            { action: "За каждое исследование +1 Сила", base: 10 },
-            { action: "Ускорение тренировок (1 мин.)", base: 60 },
-            { action: "Обучить Т1 Солдата", base: 20 },
-            { action: "Обучить Т2 Солдата", base: 30 },
-            { action: "Обучить Солдата Т3", base: 40 },
-            { action: "Обучить Солдата Т4", base: 50 },
-            { action: "Обучить Солдата Т5", base: 60 },
-            { action: "Обучить Солдата Т6", base: 70 },
-            { action: "Обучить Солдата Т7", base: 80 },
-            { action: "Облучить Солдата Т8", base: 90 }
-        ],
-        "Рейд": [
-            { action: "За каждого уничтоженного бойца T7", base: 18 },
-            { action: "За каждого уничтоженного солдата T8", base: 20 },
-            { action: "За каждого уничтоженного солдата T9", base: 23 },
-            { action: "За каждого уничтоженного солдата T10", base: 25 },
-            { action: "За каждого потерянного солдата T1", base: 4 },
-            { action: "За каждого потерянного солдата T2", base: 6 },
-            { action: "За каждого потерянного солдата T3", base: 8 },
-            { action: "За каждого погибшего солдата T4", base: 10 },
-            { action: "За каждого погибшего солдата T5", base: 12 },
-            { action: "За каждого погибшего солдата T6", base: 14 },
-            { action: "За каждого погибшего солдата T7", base: 16 },
-            { action: "За каждого погибшего солдата T8", base: 18 },
-            { action: "За каждого погибшего солдата T9", base: 20 },
-            { action: "За каждого потерянного бойца T10", base: 22 },
-            { action: "Отправить 1 Легендарный Транспортник", base: 200000 }
-        ]
-    };
 
     const rewardThresholds = [38000, 145000, 550000, 650000, 1020000, 2280000, 2630000, 3620000, 7190000];
 
@@ -998,18 +945,30 @@
         return 1 + (allBonus + categoryBonus) / 100;
     }
 
-    function updateScoreForPhase(phase, categoryMap) {
+    function updateScoreForPhase(phase, categoryMap, customPoints = null) {
         let total = 0;
         const multiplier = getBonusMultiplier(phase, categoryMap);
         const inputs = document.querySelectorAll(`.score-input[data-phase="${phase}"]`);
         inputs.forEach((inp, idx) => {
-            const count = parseInt(inp.value) || 0;
-            const base = parseInt(inp.dataset.base);
+            const action = inp.dataset.action;
+            let count = parseFloat(inp.value) || 0;
+            let base = parseFloat(inp.dataset.base);
+            if (action === "experience") {
+                // опыт в тысячах, очки за каждые 660
+                count = Math.floor(count / 660);
+            } else if (action === "food" || action === "metal") {
+                count = Math.floor(count / 100);
+            } else if (action === "oil") {
+                count = Math.floor(count / 60);
+            }
             const rowTotal = count * base * multiplier;
             const totalCell = document.getElementById(`total_${phase}_${idx}`);
             if (totalCell) totalCell.innerText = Math.floor(rowTotal);
             total += rowTotal;
         });
+        if (customPoints !== null) {
+            total += customPoints;
+        }
         const totalDiv = document.getElementById(`total_${phase}`);
         if (totalDiv) totalDiv.innerText = `Итого: ${Math.floor(total)} очков`;
         const progressDiv = document.getElementById(`progress_${phase}`);
@@ -1047,6 +1006,12 @@
             "Боеготовность": "vs_train",
             "Рейд": "vs_kill"
         };
+        const actionMap = {
+            "Использовать 660 опыта Героя": "experience",
+            "Собрать 100 ед. еды": "food",
+            "Собрать 100 ед. металла": "metal",
+            "Собрать 60 ед. нефти": "oil"
+        };
         phases.forEach(phase => {
             const card = document.createElement("div");
             card.className = "score-calc";
@@ -1057,15 +1022,23 @@
             content.className = "score-content";
             const table = document.createElement("table");
             table.className = "score-table";
-            let thead = `<thead><th>Действие</th><th>Базовые очки</th><th>Количество</th><th>Итого</th></thead><tbody>`;
+            let thead = `<thead><th>Действие</th><th>Базовые очки</th><th>Количество / суммарно</th><th>Итого</th></thead><tbody>`;
             let tbody = "";
             scoreData[phase].forEach((item, idx) => {
                 const inputId = `${phase}_${idx}`;
+                let inputHtml = `<input type="number" id="${inputId}" value="0" min="0" step="1" class="score-input" data-phase="${phase}" data-base="${item.base}" data-action="${actionMap[item.action] || ""}">`;
+                if (actionMap[item.action] === "experience") {
+                    inputHtml = `<input type="number" id="${inputId}" value="0" min="0" step="1000" class="score-input" data-phase="${phase}" data-base="${item.base}" data-action="experience" placeholder="тыс. опыта">`;
+                } else if (actionMap[item.action] === "food" || actionMap[item.action] === "metal") {
+                    inputHtml = `<input type="number" id="${inputId}" value="0" min="0" step="100" class="score-input" data-phase="${phase}" data-base="${item.base}" data-action="${actionMap[item.action]}" placeholder="всего единиц">`;
+                } else if (actionMap[item.action] === "oil") {
+                    inputHtml = `<input type="number" id="${inputId}" value="0" min="0" step="60" class="score-input" data-phase="${phase}" data-base="${item.base}" data-action="oil" placeholder="всего единиц">`;
+                }
                 tbody += `<tr>
-                             <td>${item.action}</td>
-                             <td>${item.base}</td>
-                             <td><input type="number" id="${inputId}" value="0" min="0" step="1" class="score-input" data-phase="${phase}" data-base="${item.base}"></td>
-                            <td class="score-row-total" id="total_${phase}_${idx}">0</td>
+                              <td>${item.action}</td>
+                              <td>${item.base}</td>
+                              <td>${inputHtml}</td>
+                              <td class="score-row-total" id="total_${phase}_${idx}">0</td>
                            </tr>`;
             });
             tbody += `</tbody>`;
@@ -1078,9 +1051,13 @@
             progressDiv.className = "score-progress";
             progressDiv.id = `progress_${phase}`;
             progressDiv.innerHTML = `<div class="progress-bar"><div class="progress-fill"></div><div class="progress-marks"></div></div><div class="progress-labels"></div>`;
+            const addPointsDiv = document.createElement("div");
+            addPointsDiv.className = "add-points";
+            addPointsDiv.innerHTML = `<input type="number" id="add_${phase}" placeholder="+ очки" value="0" step="1000"><button class="add-points-btn" data-phase="${phase}">➕ Добавить очки</button>`;
             content.appendChild(table);
             content.appendChild(totalDiv);
             content.appendChild(progressDiv);
+            content.appendChild(addPointsDiv);
             card.appendChild(header);
             card.appendChild(content);
             container.appendChild(card);
@@ -1099,6 +1076,23 @@
         });
         document.querySelectorAll(".score-input").forEach(inp => {
             inp.addEventListener("input", () => updateScoreForPhase(inp.dataset.phase, categoryMap));
+        });
+        document.querySelectorAll(".add-points-btn").forEach(btn => {
+            btn.addEventListener("click", (e) => {
+                const phase = btn.dataset.phase;
+                const addField = document.getElementById(`add_${phase}`);
+                let addValue = parseInt(addField.value) || 0;
+                if (addValue !== 0) {
+                    let currentTotal = 0;
+                    const totalDiv = document.getElementById(`total_${phase}`);
+                    if (totalDiv) {
+                        const match = totalDiv.innerText.match(/\d+/);
+                        if (match) currentTotal = parseInt(match[0]) || 0;
+                    }
+                    updateScoreForPhase(phase, categoryMap, currentTotal + addValue);
+                    addField.value = 0;
+                }
+            });
         });
         ["Радар","Строительство","Технологии","Герой","Боеготовность","Рейд"].forEach(p => updateScoreForPhase(p, categoryMap));
     }
@@ -1127,6 +1121,78 @@
         select.addEventListener("change", () => showUpgrade(parseInt(select.value)));
         showUpgrade(1);
     }
+
+    const scoreData = {
+        "Радар": [
+            { action: "Потратить 1 Выносливость", base: 150 },
+            { action: "Выполнить задание Радара", base: 10000 },
+            { action: "Использовать 660 опыта Героя", base: 1 },
+            { action: "Набор с алмазами [1 алмаз]", base: 30 },
+            { action: "Собрать 100 ед. еды", base: 20 },
+            { action: "Собрать 100 ед. металла", base: 20 },
+            { action: "Собрать 60 ед. нефти", base: 20 },
+            { action: "Использовать 1 Боевой чип бойца", base: 3 },
+            { action: "Использовать 1 Часть бойца", base: 2500 }
+        ],
+        "Строительство": [
+            { action: "Набор с алмазами [1 алмаз]", base: 30 },
+            { action: "За каждую минуту ускорения постройки", base: 60 },
+            { action: "За каждую постройку +1 Мощь", base: 10 },
+            { action: "Выполнить 1 оранжевую миссию Спецопераций", base: 75000 },
+            { action: "Отправить 1 Легендарный Транспортник", base: 100000 },
+            { action: "Провести 1 призыв выжившего", base: 1500 }
+        ],
+        "Технологии": [
+            { action: "Завершить событие Радара", base: 10000 },
+            { action: "Использовать 1 минуту ускорения исследования", base: 60 },
+            { action: "Завершить исследование за +1 Силу", base: 10 },
+            { action: "Потратить 1 Научные данные", base: 100 },
+            { action: "Открыть сундук с компонентами бойца", base: 500 }
+        ],
+        "Герой": [
+            { action: "Использовать 660 опыта Героя", base: 1 },
+            { action: "Набор с алмазами [1 алмаз]", base: 30 },
+            { action: "Нанять героя 1 раз", base: 1500 },
+            { action: "Использовать 1 Мифический Осколок Героя", base: 10000 },
+            { action: "Использовать 1 Эпический Осколок Героя", base: 3500 },
+            { action: "Использовать 1 Редкий Осколок Героя", base: 1000 },
+            { action: "Использовать 1 Книгу опыта навыков", base: 10 }
+        ],
+        "Боеготовность": [
+            { action: "Выполнить задание Радара", base: 10000 },
+            { action: "Набор с алмазами [1 алмаз]", base: 30 },
+            { action: "За каждую минуту ускорения постройки", base: 60 },
+            { action: "За каждую постройку +1 Мощь", base: 10 },
+            { action: "За каждую минуту ускорения исследований", base: 60 },
+            { action: "За каждое исследование +1 Сила", base: 10 },
+            { action: "Ускорение тренировок (1 мин.)", base: 60 },
+            { action: "Обучить Т1 Солдата", base: 20 },
+            { action: "Обучить Т2 Солдата", base: 30 },
+            { action: "Обучить Солдата Т3", base: 40 },
+            { action: "Обучить Солдата Т4", base: 50 },
+            { action: "Обучить Солдата Т5", base: 60 },
+            { action: "Обучить Солдата Т6", base: 70 },
+            { action: "Обучить Солдата Т7", base: 80 },
+            { action: "Облучить Солдата Т8", base: 90 }
+        ],
+        "Рейд": [
+            { action: "За каждого уничтоженного бойца T7", base: 18 },
+            { action: "За каждого уничтоженного солдата T8", base: 20 },
+            { action: "За каждого уничтоженного солдата T9", base: 23 },
+            { action: "За каждого уничтоженного солдата T10", base: 25 },
+            { action: "За каждого потерянного солдата T1", base: 4 },
+            { action: "За каждого потерянного солдата T2", base: 6 },
+            { action: "За каждого потерянного солдата T3", base: 8 },
+            { action: "За каждого погибшего солдата T4", base: 10 },
+            { action: "За каждого погибшего солдата T5", base: 12 },
+            { action: "За каждого погибшего солдата T6", base: 14 },
+            { action: "За каждого погибшего солдата T7", base: 16 },
+            { action: "За каждого погибшего солдата T8", base: 18 },
+            { action: "За каждого погибшего солдата T9", base: 20 },
+            { action: "За каждого потерянного бойца T10", base: 22 },
+            { action: "Отправить 1 Легендарный Транспортник", base: 200000 }
+        ]
+    };
 
     function buildGuides() {
         const guides = [
@@ -1337,7 +1403,7 @@
     function loadCalendar() {
         const tbody = document.querySelector("#calendarTable tbody");
         tbody.innerHTML = "";
-        calendarData.forEach(r => { const tr = document.createElement("tr"); tr.innerHTML = `          <td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td>`; tbody.appendChild(tr); });
+        calendarData.forEach(r => { const tr = document.createElement("tr"); tr.innerHTML = `           <td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td>`; tbody.appendChild(tr); });
     }
 
     document.addEventListener("DOMContentLoaded", () => {
