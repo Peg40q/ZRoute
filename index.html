@@ -20,6 +20,8 @@
             --warning-border: #ff9800;
             --urgent-bg: #ffcccc;
             --urgent-text: #a00;
+            --progress-bg: #e2e8f0;
+            --progress-fill: #2c5a8c;
         }
         body.dark {
             --bg: #121212;
@@ -32,6 +34,8 @@
             --warning-border: #ffaa33;
             --urgent-bg: #4a1a1a;
             --urgent-text: #ff8888;
+            --progress-bg: #2d3748;
+            --progress-fill: #4c9aff;
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -315,19 +319,78 @@
             background: var(--accent-light);
             border-radius: 12px;
         }
-        .vs-multiplier {
-            margin: 10px 0;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
+        .vs-panel {
+            background: var(--accent-light);
+            border-radius: 16px;
+            padding: 12px;
+            margin-bottom: 20px;
         }
-        .vs-multiplier input {
-            width: 80px;
+        .vs-panel h3 {
+            margin: 0 0 8px 0;
+            font-size: 1rem;
+        }
+        .vs-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .vs-item {
+            flex: 1;
+            min-width: 120px;
+        }
+        .vs-item label {
+            display: block;
+            font-size: 0.75rem;
+            margin-bottom: 2px;
+        }
+        .vs-item input {
+            width: 100%;
             padding: 4px;
             border-radius: 20px;
             border: 1px solid var(--border);
+            background: var(--card);
             text-align: center;
+        }
+        .progress-bar {
+            background: var(--progress-bg);
+            border-radius: 20px;
+            height: 20px;
+            margin: 8px 0;
+            position: relative;
+            overflow: hidden;
+        }
+        .progress-fill {
+            background: var(--progress-fill);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s;
+        }
+        .progress-marks {
+            position: relative;
+            height: 20px;
+            margin-top: -20px;
+            pointer-events: none;
+        }
+        .progress-marks span {
+            position: absolute;
+            width: 2px;
+            height: 20px;
+            background: white;
+            top: 0;
+            transform: translateX(-50%);
+        }
+        .progress-labels {
+            font-size: 0.7rem;
+            display: flex;
+            justify-content: space-between;
+            margin-top: 4px;
+        }
+        .score-progress {
+            margin-top: 8px;
+        }
+        .score-progress div {
+            font-size: 0.8rem;
         }
         .upgrade-selector {
             background: var(--card);
@@ -558,19 +621,29 @@
     <div class="tab-content active" id="tab-phases"><div id="phasesContainer"></div></div>
     
     <div class="tab-content" id="tab-score">
+        <div class="vs-panel">
+            <h3>⚙️ Технологии VS (бонусы в %)</h3>
+            <div class="vs-grid">
+                <div class="vs-item"><label>📡 Радар</label><input type="number" id="vs_radar" value="0" step="5" class="vs-bonus"></div>
+                <div class="vs-item"><label>🏗️ Строительство</label><input type="number" id="vs_build" value="0" step="5" class="vs-bonus"></div>
+                <div class="vs-item"><label>🔬 Исследования</label><input type="number" id="vs_research" value="0" step="5" class="vs-bonus"></div>
+                <div class="vs-item"><label>⚔️ Тренировка</label><input type="number" id="vs_train" value="0" step="5" class="vs-bonus"></div>
+                <div class="vs-item"><label>🦸 Найм героев</label><input type="number" id="vs_hire" value="0" step="5" class="vs-bonus"></div>
+                <div class="vs-item"><label>⚡ Ускорение</label><input type="number" id="vs_speed" value="0" step="5" class="vs-bonus"></div>
+                <div class="vs-item"><label>💀 Убийство/потеря</label><input type="number" id="vs_kill" value="0" step="5" class="vs-bonus"></div>
+                <div class="vs-item"><label>✨ Общий (все действия)</label><input type="number" id="vs_all" value="0" step="5" class="vs-bonus"></div>
+            </div>
+            <div class="small-note">* Бонусы суммируются. Пример: радар +50% + общий +100% = +150% → множитель 2.5</div>
+        </div>
         <div id="scoreContainer"></div>
-        <div class="small-note">* Очки зависят от прокачки ветки VS (коэффициент). Введите множитель и количество действий.</div>
+        <div class="small-note">* Очки за действия пересчитываются автоматически. Прогресс показывает набранные очки и пороги сундуков.</div>
     </div>
 
     <div class="tab-content" id="tab-upgrades"><div id="upgradesContainer"></div></div>
     <div class="tab-content" id="tab-calendar">
         <div class="table-wrapper" style="overflow-x:auto;">
             <table id="calendarTable" style="min-width:300px; width:100%; border-collapse:collapse;">
-                <thead>
-                    <th>День</th>
-                    <th>Время</th>
-                    <th>Событие</th>
-                </thead>
+                <thead><th>День</th><th>Время</th><th>Событие</th></thead>
                 <tbody></tbody>
             </table>
         </div>
@@ -597,10 +670,8 @@
                     <label>Количество <input type="number" id="itemQty" value="1" min="1"></label>
                     <label>Длительность
                         <select id="durationSelect">
-                            <option value="1">1 минута</option>
-                            <option value="5">5 минут</option>
-                            <option value="60">1 час</option>
-                            <option value="240">4 часа</option>
+                            <option value="1">1 минута</option><option value="5">5 минут</option>
+                            <option value="60">1 час</option><option value="240">4 часа</option>
                             <option value="480">8 часов</option>
                         </select>
                     </label>
@@ -649,11 +720,9 @@
 </div>
 
 <script>
-    // === Защита от копирования ===
     document.addEventListener('contextmenu', e => e.preventDefault());
     document.addEventListener('keydown', e => { if (e.ctrlKey && (e.key === 'u' || e.key === 's' || e.key === 'c' || e.key === 'i' || e.key === 'j')) e.preventDefault(); });
 
-    // === ДАННЫЕ (для фаз и календаря) ===
     const calendarData = [
         ["День 1","09:00:00","Строительство Базы"],["День 1","13:00:00","Обучить Солдат"],["День 1","17:00:00","Исследования технологий"],["День 1","21:00:00","Улучшение бойца"],["День 1","01:00:00","Улучшение Героя"],["День 1","05:00:00","Строительство Базы"],
         ["День 2","09:00:00","Улучшение Героя"],["День 2","13:00:00","Строительство Базы"],["День 2","17:00:00","Обучить Солдат"],["День 2","21:00:00","Исследования технологий"],["День 2","01:00:00","Улучшение бойца"],["День 2","05:00:00","Улучшение Героя"],
@@ -708,11 +777,10 @@
         [1,"—","—"],[2,"Полигон (Ур.1)","Парковка (Ур.1)"],[3,"Линия обороны (Ур.2)","—"],[4,"Тренировочный лагерь солдат (Ур.3)","Полигон (Ур.3)"],[5,"Линия обороны (Ур.4)","Тренировочный лагерь солдат (Ур.4)"],[6,"Линия обороны (Ур.5)","Полигон (Ур.5)"],[7,"Линия обороны (Ур.6)","Центр подготовки (по классу) (Ур.6)"],[8,"Отдел альфа-исследований (Ур.7)","Центр альянса (Ур.7)"],[9,"Отдел альфа-исследований (Ур.8)","Центр подготовки (по классу) (Ур.8)"],[10,"Отдел альфа-исследований (Ур.9)","Госпиталь (Ур.9)"],[11,"Отдел альфа-исследований (Ур.10)","Линия обороны (Ур.10)"],[12,"Отдел альфа-исследований (Ур.11)","Тренировочный лагерь солдат (Ур.11)"],[13,"Отдел альфа-исследований (Ур.12)","Центр подготовки (по классу) (Ур.12)"],[14,"Отдел альфа-исследований (Ур.13)","Полигон (Ур.13)"],[15,"Отдел альфа-исследований (Ур.14)","Линия обороны (Ур.14)"],[16,"Отдел альфа-исследований (Ур.15)","Центр альянса (Ур.15)"],[17,"Отдел альфа-исследований (Ур.16)","Центр подготовки (по классу) (Ур.16)"],[18,"Отдел альфа-исследований (Ур.17)","Госпиталь (Ур.17)"],[19,"Отдел альфа-исследований (Ур.18)","Линия обороны (Ур.18)"],[20,"Отдел альфа-исследований (Ур.19)","Тренировочный лагерь солдат (Ур.19)"],[21,"Отдел альфа-исследований (Ур.20)","Центр подготовки (по классу) (Ур.20)"],[22,"Отдел альфа-исследований (Ур.21)","Полигон (Ур.21)"],[23,"Отдел альфа-исследований (Ур.22)","Линия обороны (Ур.22)"],[24,"Отдел альфа-исследований (Ур.23)","Центр альянса (Ур.23)"],[25,"Отдел альфа-исследований (Ур.24)","Центр подготовки (по классу) (Ур.24)"],[26,"Отдел альфа-исследований (Ур.25)","Госпиталь (Ур.25)"],[27,"Отдел альфа-исследований (Ур.26)","Линия обороны (Ур.26)"],[28,"Отдел альфа-исследований (Ур.27)","Тренировочный лагерь солдат (Ур.27)"],[29,"Отдел альфа-исследований (Ур.28)","Центр подготовки (по классу) (Ур.28)"],[30,"Отдел альфа-исследований (Ур.29)","Полигон (Ур.29)"]
     ];
 
-    // === ДАННЫЕ ДЛЯ ОЧКОВ ФАЗ ===
     const scoreData = {
         "Радар": [
             { action: "Потратить 1 Выносливость", base: 150 },
-            { action: "Выполнить задание Радара", base: 12000 },
+            { action: "Выполнить задание Радара", base: 10000 },
             { action: "Использовать 660 опыта Героя", base: 1 },
             { action: "Набор с алмазами [1 алмаз]", base: 30 },
             { action: "Собрать 100 ед. еды", base: 20 },
@@ -730,7 +798,7 @@
             { action: "Провести 1 призыв выжившего", base: 1500 }
         ],
         "Технологии": [
-            { action: "Завершить событие Радара", base: 12000 },
+            { action: "Завершить событие Радара", base: 10000 },
             { action: "Использовать 1 минуту ускорения исследования", base: 60 },
             { action: "Завершить исследование за +1 Силу", base: 10 },
             { action: "Потратить 1 Научные данные", base: 100 },
@@ -746,7 +814,7 @@
             { action: "Использовать 1 Книгу опыта навыков", base: 10 }
         ],
         "Боеготовность": [
-            { action: "Выполнить задание Радара", base: 12000 },
+            { action: "Выполнить задание Радара", base: 10000 },
             { action: "Набор с алмазами [1 алмаз]", base: 30 },
             { action: "За каждую минуту ускорения постройки", base: 60 },
             { action: "За каждую постройку +1 Мощь", base: 10 },
@@ -781,7 +849,8 @@
         ]
     };
 
-    // === ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ ===
+    const rewardThresholds = [38000, 145000, 550000, 650000, 1020000, 2280000, 2630000, 3620000, 7190000];
+
     function getGameDay() { const d = new Date().getDay(); return {0:1,1:2,2:3,3:4,4:5,5:6,6:7}[d]; }
     function getWeekdayName() { return ["Воскресенье","Понедельник","Вторник","Среда","Четверг","Пятница","Суббота"][new Date().getDay()]; }
     function formatTime(seconds) { if (seconds<0) seconds=0; const d=Math.floor(seconds/86400); seconds%=86400; const h=Math.floor(seconds/3600); seconds%=3600; const m=Math.floor(seconds/60); const s=seconds%60; return `${d} дн ${h} ч ${m} мин ${s} сек`; }
@@ -810,7 +879,6 @@
         return null;
     }
 
-    // === ПОСТРОЕНИЕ ФАЗ ===
     function buildPhases() {
         const container = document.getElementById("phasesContainer");
         container.innerHTML = "";
@@ -920,69 +988,20 @@
         });
     }
 
-    // === ПОСТРОЕНИЕ КАЛЬКУЛЯТОРА ОЧКОВ ===
-    function buildScoreCalculator() {
-        const container = document.getElementById("scoreContainer");
-        container.innerHTML = "";
-        const phases = ["Радар", "Строительство", "Технологии", "Герой", "Боеготовность", "Рейд"];
-        phases.forEach(phase => {
-            const card = document.createElement("div");
-            card.className = "score-calc";
-            const header = document.createElement("div");
-            header.className = "score-header";
-            header.innerHTML = `<span>🏆 ${phase}</span><span class="toggle-icon">▼</span>`;
-            const content = document.createElement("div");
-            content.className = "score-content";
-            const table = document.createElement("table");
-            table.className = "score-table";
-            let thead = `<thead><tr><th>Действие</th><th>Базовые очки</th><th>Количество</th><th>Итого</th></tr></thead><tbody>`;
-            let tbody = "";
-            scoreData[phase].forEach((item, idx) => {
-                const inputId = `${phase}_${idx}`;
-                tbody += `<tr>
-                            <td>${item.action}</td>
-                            <td>${item.base}</td>
-                            <td><input type="number" id="${inputId}" value="0" min="0" step="1" class="score-input" data-phase="${phase}" data-base="${item.base}"></td>
-                            <td class="score-row-total" id="total_${phase}_${idx}">0</td>
-                          </tr>`;
-            });
-            tbody += `</tbody>`;
-            table.innerHTML = thead + tbody;
-            const multiplierDiv = document.createElement("div");
-            multiplierDiv.className = "vs-multiplier";
-            multiplierDiv.innerHTML = `<label>Коэффициент VS (прокачка ветки):</label>
-                                       <input type="number" id="vs_${phase}" value="1" step="0.1" min="0.5" class="vs-input" data-phase="${phase}">`;
-            const totalDiv = document.createElement("div");
-            totalDiv.className = "score-total";
-            totalDiv.id = `total_${phase}`;
-            totalDiv.innerText = "Итого: 0";
-            content.appendChild(table);
-            content.appendChild(multiplierDiv);
-            content.appendChild(totalDiv);
-            card.appendChild(header);
-            card.appendChild(content);
-            container.appendChild(card);
-            header.onclick = () => {
-                card.classList.toggle("open");
-                const icon = header.querySelector(".toggle-icon");
-                icon.innerText = card.classList.contains("open") ? "▲" : "▼";
-            };
-            card.classList.add("open");
-        });
-        // Добавляем обработчики
-        document.querySelectorAll(".score-input").forEach(inp => {
-            inp.addEventListener("input", () => updateScoreForPhase(inp.dataset.phase));
-        });
-        document.querySelectorAll(".vs-input").forEach(inp => {
-            inp.addEventListener("input", () => updateScoreForPhase(inp.dataset.phase));
-        });
-        phases.forEach(phase => updateScoreForPhase(phase));
+    function getBonusMultiplier(phase, categoryMap) {
+        const allBonus = parseFloat(document.getElementById("vs_all").value) || 0;
+        let categoryBonus = 0;
+        if (categoryMap[phase]) {
+            const val = parseFloat(document.getElementById(categoryMap[phase]).value) || 0;
+            categoryBonus = val;
+        }
+        return 1 + (allBonus + categoryBonus) / 100;
     }
 
-    function updateScoreForPhase(phase) {
+    function updateScoreForPhase(phase, categoryMap) {
         let total = 0;
+        const multiplier = getBonusMultiplier(phase, categoryMap);
         const inputs = document.querySelectorAll(`.score-input[data-phase="${phase}"]`);
-        const multiplier = parseFloat(document.getElementById(`vs_${phase}`).value) || 1;
         inputs.forEach((inp, idx) => {
             const count = parseInt(inp.value) || 0;
             const base = parseInt(inp.dataset.base);
@@ -993,9 +1012,97 @@
         });
         const totalDiv = document.getElementById(`total_${phase}`);
         if (totalDiv) totalDiv.innerText = `Итого: ${Math.floor(total)} очков`;
+        const progressDiv = document.getElementById(`progress_${phase}`);
+        if (progressDiv) {
+            const filled = Math.floor(total);
+            let nextThreshold = rewardThresholds.find(t => t > filled) || rewardThresholds[rewardThresholds.length-1];
+            let percent = Math.min(100, (filled / nextThreshold) * 100);
+            progressDiv.querySelector(".progress-fill").style.width = `${percent}%`;
+            let marksHtml = "";
+            rewardThresholds.forEach(t => {
+                if (t <= nextThreshold) {
+                    let left = (t / nextThreshold) * 100;
+                    marksHtml += `<span style="left: ${left}%;"></span>`;
+                }
+            });
+            progressDiv.querySelector(".progress-marks").innerHTML = marksHtml;
+            const nextIndex = rewardThresholds.findIndex(t => t > filled);
+            if (nextIndex !== -1) {
+                progressDiv.querySelector(".progress-labels").innerHTML = `${filled.toLocaleString()} / ${rewardThresholds[nextIndex].toLocaleString()}<br>Следующий сундук: ${rewardThresholds[nextIndex].toLocaleString()}`;
+            } else {
+                progressDiv.querySelector(".progress-labels").innerHTML = `${filled.toLocaleString()} / Все сундуки получены!`;
+            }
+        }
     }
 
-    // === Улучшения ===
+    function buildScoreCalculator() {
+        const container = document.getElementById("scoreContainer");
+        container.innerHTML = "";
+        const phases = ["Радар", "Строительство", "Технологии", "Герой", "Боеготовность", "Рейд"];
+        const categoryMap = {
+            "Радар": "vs_radar",
+            "Строительство": "vs_build",
+            "Технологии": "vs_research",
+            "Герой": "vs_hire",
+            "Боеготовность": "vs_train",
+            "Рейд": "vs_kill"
+        };
+        phases.forEach(phase => {
+            const card = document.createElement("div");
+            card.className = "score-calc";
+            const header = document.createElement("div");
+            header.className = "score-header";
+            header.innerHTML = `<span>🏆 ${phase}</span><span class="toggle-icon">▼</span>`;
+            const content = document.createElement("div");
+            content.className = "score-content";
+            const table = document.createElement("table");
+            table.className = "score-table";
+            let thead = `<thead><th>Действие</th><th>Базовые очки</th><th>Количество</th><th>Итого</th></thead><tbody>`;
+            let tbody = "";
+            scoreData[phase].forEach((item, idx) => {
+                const inputId = `${phase}_${idx}`;
+                tbody += `<tr>
+                             <td>${item.action}</td>
+                             <td>${item.base}</td>
+                             <td><input type="number" id="${inputId}" value="0" min="0" step="1" class="score-input" data-phase="${phase}" data-base="${item.base}"></td>
+                            <td class="score-row-total" id="total_${phase}_${idx}">0</td>
+                           </tr>`;
+            });
+            tbody += `</tbody>`;
+            table.innerHTML = thead + tbody;
+            const totalDiv = document.createElement("div");
+            totalDiv.className = "score-total";
+            totalDiv.id = `total_${phase}`;
+            totalDiv.innerText = "Итого: 0";
+            const progressDiv = document.createElement("div");
+            progressDiv.className = "score-progress";
+            progressDiv.id = `progress_${phase}`;
+            progressDiv.innerHTML = `<div class="progress-bar"><div class="progress-fill"></div><div class="progress-marks"></div></div><div class="progress-labels"></div>`;
+            content.appendChild(table);
+            content.appendChild(totalDiv);
+            content.appendChild(progressDiv);
+            card.appendChild(header);
+            card.appendChild(content);
+            container.appendChild(card);
+            header.onclick = () => {
+                card.classList.toggle("open");
+                const icon = header.querySelector(".toggle-icon");
+                icon.innerText = card.classList.contains("open") ? "▲" : "▼";
+            };
+            card.classList.add("open");
+        });
+        const vsInputs = document.querySelectorAll(".vs-bonus");
+        vsInputs.forEach(inp => {
+            inp.addEventListener("input", () => {
+                ["Радар","Строительство","Технологии","Герой","Боеготовность","Рейд"].forEach(p => updateScoreForPhase(p, categoryMap));
+            });
+        });
+        document.querySelectorAll(".score-input").forEach(inp => {
+            inp.addEventListener("input", () => updateScoreForPhase(inp.dataset.phase, categoryMap));
+        });
+        ["Радар","Строительство","Технологии","Герой","Боеготовность","Рейд"].forEach(p => updateScoreForPhase(p, categoryMap));
+    }
+
     function buildUpgrades() {
         const container = document.getElementById("upgradesContainer");
         container.innerHTML = `
@@ -1021,7 +1128,6 @@
         showUpgrade(1);
     }
 
-    // === ИНСТРУКЦИИ ===
     function buildGuides() {
         const guides = [
             {title: "📡 Фаза 1: Радар — полное руководство",
@@ -1089,7 +1195,6 @@
         });
     }
 
-    // === ОБЩИЕ ФУНКЦИИ ОБНОВЛЕНИЯ ВРЕМЕНИ ===
     function getCurrentPhaseAndNext() {
         const now = new Date();
         const weekday = getWeekdayName();
@@ -1148,7 +1253,6 @@
         document.getElementById("localTime").innerText = now.toLocaleString("ru-RU");
         document.getElementById("gameDay").innerText = `День ${getGameDay()}`;
         document.getElementById("weekdayName").innerText = getWeekdayName();
-
         const { currentPhase, nextPhase } = getCurrentPhaseAndNext();
         let phaseHtml = "";
         if (currentPhase) {
@@ -1160,7 +1264,6 @@
             phaseHtml += `⏰ До следующей фазы "${nextPhase.name}" осталось: ${h} ч ${m} мин ${s} сек.`;
         } else phaseHtml += "⏰ До следующей фазы: нет данных";
         document.getElementById("phaseInfo").innerHTML = phaseHtml;
-
         const nextEvent = getNextCalendarEvent();
         if (nextEvent) {
             document.getElementById("nextEvent").innerHTML = `➡ До события "${nextEvent.name}" осталось: ${nextEvent.hours} ч ${nextEvent.minutes} мин ${nextEvent.seconds} сек`;
@@ -1182,7 +1285,6 @@
         document.getElementById("reminder").innerHTML = `<strong>📌 Напоминание на ${day}</strong><ul>${list.map(t => `<li>${t}</li>`).join('')}</ul>`;
     }
 
-    // === КАЛЬКУЛЯТОР ВРЕМЕНИ ===
     let items = [], selectedIdx = -1;
     function getStartSec() { return (parseInt(document.getElementById("startDays").value)||0)*86400 + (parseInt(document.getElementById("startHours").value)||0)*3600 + (parseInt(document.getElementById("startMinutes").value)||0)*60 + (parseInt(document.getElementById("startSeconds").value)||0); }
     function updateResult() {
@@ -1208,7 +1310,6 @@
     function delItem() { if(selectedIdx!==-1){ items.splice(selectedIdx,1); selectedIdx=-1; renderItems(); updateResult(); } else alert("Выберите предмет"); }
     function resetAll() { items=[]; selectedIdx=-1; renderItems(); document.getElementById("startDays").value=0; document.getElementById("startHours").value=0; document.getElementById("startMinutes").value=0; document.getElementById("startSeconds").value=0; updateResult(); }
 
-    // === РЕСУРСЫ ===
     function convertComponents() {
         let src = document.getElementById("srcType").value;
         let amt = parseFloat(document.getElementById("srcAmount").value) || 0;
@@ -1236,10 +1337,9 @@
     function loadCalendar() {
         const tbody = document.querySelector("#calendarTable tbody");
         tbody.innerHTML = "";
-        calendarData.forEach(r => { const tr = document.createElement("tr"); tr.innerHTML = `         <td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td>`; tbody.appendChild(tr); });
+        calendarData.forEach(r => { const tr = document.createElement("tr"); tr.innerHTML = `          <td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td>`; tbody.appendChild(tr); });
     }
 
-    // === ИНИЦИАЛИЗАЦИЯ ===
     document.addEventListener("DOMContentLoaded", () => {
         buildPhases();
         buildScoreCalculator();
@@ -1247,16 +1347,13 @@
         buildGuides();
         loadCalendar();
         updateReminder();
-
         const interval = setInterval(() => {
             updateTimeDisplay();
             updatePhaseTimers();
             updateReminder();
         }, 1000);
-
         const timePanel = document.getElementById("timePanel");
         document.getElementById("collapseTimeBtn").addEventListener("click", () => { timePanel.classList.toggle("collapsed"); });
-
         const calcBody = document.getElementById("calcBody");
         const calcIcon = document.getElementById("calcToggleIcon");
         let calcCollapsed = false;
@@ -1274,10 +1371,8 @@
         document.querySelectorAll("#startDays, #startHours, #startMinutes, #startSeconds").forEach(e => e.addEventListener("input", updateResult));
         document.querySelectorAll('input[name="mode"]').forEach(r => r.addEventListener("change", updateResult));
         updateResult();
-
         document.getElementById("calcConversion").onclick = convertComponents;
         document.getElementById("calcUpgrade").onclick = calcUpgrade;
-
         const themeToggle = document.getElementById("themeToggle");
         let dark = false;
         themeToggle.onclick = () => {
@@ -1285,7 +1380,6 @@
             document.body.classList.toggle("dark", dark);
             themeToggle.innerText = dark ? "☀️ Светлая" : "🌙 Тёмная";
         };
-
         const tabBtns = document.querySelectorAll(".tab-button");
         const tabs = document.querySelectorAll(".tab-content");
         tabBtns.forEach(btn => {
