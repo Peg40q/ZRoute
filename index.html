@@ -22,12 +22,13 @@
             --urgent-text: #a00;
             --progress-bg: #e2e8f0;
             --progress-fill: #2c5a8c;
+            --score-row-bg: #ffffff;
         }
         body.dark {
             --bg: #121212;
             --card: #1e1e2f;
             --text: #e2e8f0;
-            --border: #2d3748;
+            --border: #334155;
             --accent: #4c9aff;
             --accent-light: #2d2d3a;
             --warning-bg: #2d2a1a;
@@ -36,6 +37,7 @@
             --urgent-text: #ff8888;
             --progress-bg: #2d3748;
             --progress-fill: #4c9aff;
+            --score-row-bg: #1e1e2f;
         }
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -135,6 +137,7 @@
             margin-bottom: 1rem;
             border-radius: 12px;
             font-size: 0.85rem;
+            color: var(--text);
         }
         .reminder strong {
             display: block;
@@ -302,6 +305,7 @@
             padding: 6px;
             text-align: left;
             border-bottom: 1px solid var(--border);
+            background-color: var(--score-row-bg);
         }
         .score-table input {
             width: 100px;
@@ -309,6 +313,7 @@
             border-radius: 12px;
             border: 1px solid var(--border);
             background: var(--bg);
+            color: var(--text);
             text-align: center;
         }
         .score-total {
@@ -328,6 +333,7 @@
         .vs-panel h3 {
             margin: 0 0 8px 0;
             font-size: 1rem;
+            color: var(--text);
         }
         .vs-grid {
             display: flex;
@@ -343,6 +349,7 @@
             display: block;
             font-size: 0.75rem;
             margin-bottom: 2px;
+            color: var(--text);
         }
         .vs-item input {
             width: 100%;
@@ -350,6 +357,7 @@
             border-radius: 20px;
             border: 1px solid var(--border);
             background: var(--card);
+            color: var(--text);
             text-align: center;
         }
         .progress-bar {
@@ -401,6 +409,8 @@
             padding: 4px;
             border-radius: 20px;
             border: 1px solid var(--border);
+            background: var(--bg);
+            color: var(--text);
             text-align: center;
         }
         .add-points button {
@@ -426,12 +436,14 @@
             border: 1px solid var(--border);
             font-size: 0.9rem;
             margin-top: 5px;
+            color: var(--text);
         }
         .upgrade-detail {
             background: var(--bg);
             border-radius: 12px;
             padding: 10px;
             margin-top: 8px;
+            color: var(--text);
         }
         .resource-calc {
             background: var(--card);
@@ -442,6 +454,7 @@
         .resource-calc h3 {
             margin-top: 0;
             font-size: 1rem;
+            color: var(--text);
         }
         .resource-calc select, .resource-calc input, .resource-calc button {
             width: 100%;
@@ -464,6 +477,8 @@
             text-align: center;
             font-weight: bold;
             margin-top: 0.5rem;
+            color: var(--text);
+            border: 1px solid var(--border);
         }
         .guides-container {
             display: flex;
@@ -483,6 +498,7 @@
             display: flex;
             justify-content: space-between;
             border-bottom: 1px solid var(--border);
+            color: var(--text);
         }
         .guide-content {
             padding: 0 12px;
@@ -496,6 +512,7 @@
         }
         .guide-content ul, .guide-content p {
             margin: 8px 0;
+            color: var(--text);
         }
         .upgrade-calc {
             background: var(--card);
@@ -503,23 +520,29 @@
             padding: 1rem;
             margin-bottom: 1rem;
         }
-        .upgrade-calc table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.85rem;
-        }
-        .upgrade-calc th, .upgrade-calc td {
-            padding: 6px;
-            text-align: left;
-            border-bottom: 1px solid var(--border);
+        .upgrade-calc label {
+            display: block;
+            margin: 8px 0;
+            color: var(--text);
         }
         .upgrade-calc input {
-            width: 100px;
-            padding: 4px;
-            border-radius: 12px;
+            width: 100%;
+            padding: 0.5rem;
+            border-radius: 40px;
             border: 1px solid var(--border);
             background: var(--bg);
-            text-align: center;
+            color: var(--text);
+            margin-top: 4px;
+        }
+        .upgrade-calc button {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 8px;
+            border-radius: 40px;
+            cursor: pointer;
+            width: 100%;
+            margin: 12px 0;
         }
         .calculator {
             background: var(--card);
@@ -531,6 +554,7 @@
             display: flex;
             justify-content: space-between;
             cursor: pointer;
+            color: var(--text);
         }
         .calc-body {
             overflow: hidden;
@@ -560,76 +584,30 @@
             border-radius: 20px;
             border: 1px solid var(--border);
             text-align: center;
+            background: var(--bg);
+            color: var(--text);
         }
-        .mode {
-            display: flex;
-            gap: 1rem;
-            justify-content: center;
-            margin-bottom: 1rem;
-        }
-        .add-item {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
+        .mode label {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            margin-right: 1rem;
+            color: var(--text);
         }
         .add-item label {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
             font-size: 0.7rem;
-        }
-        .add-item input, .add-item select {
-            padding: 0.3rem;
-            border-radius: 20px;
-            border: 1px solid var(--border);
-        }
-        .add-item button {
-            background: var(--accent);
-            color: white;
-            border: none;
-            padding: 0.3rem 0.7rem;
-            border-radius: 40px;
-            cursor: pointer;
-        }
-        .items-list ul {
-            list-style: none;
-            padding: 0;
-            max-height: 150px;
-            overflow-y: auto;
-            border: 1px solid var(--border);
-            border-radius: 16px;
+            color: var(--text);
         }
         .items-list li {
-            padding: 0.5rem;
-            cursor: pointer;
-            border-bottom: 1px solid var(--border);
-        }
-        .items-list li.selected {
-            background: var(--accent-light);
+            color: var(--text);
         }
         .result {
-            text-align: center;
-            font-weight: bold;
             background: var(--accent-light);
-            padding: 0.6rem;
-            border-radius: 40px;
-            margin: 1rem 0;
+            color: var(--text);
         }
         .reset-btn {
             background: #dc3545;
             color: white;
-            border: none;
-            padding: 0.5rem;
-            border-radius: 40px;
-            width: 100%;
-            cursor: pointer;
-        }
-        .small-note {
-            text-align: center;
-            font-size: 0.7rem;
-            margin-top: 1rem;
-            color: #6c757d;
         }
         .support-card {
             background: var(--accent-light);
@@ -637,9 +615,19 @@
             padding: 1rem;
             margin-bottom: 1rem;
             text-align: center;
+            color: var(--text);
+        }
+        .support-card a {
+            color: var(--accent);
         }
         button {
             cursor: pointer;
+        }
+        .small-note {
+            font-size: 0.7rem;
+            color: #6c757d;
+            margin-top: 1rem;
+            text-align: center;
         }
     </style>
 </head>
@@ -909,7 +897,9 @@
             eventDate.setHours(h,m,s,0);
             let daysAhead = (dn - gd + 7) % 7;
             eventDate.setDate(now.getDate() + daysAhead);
-            if (daysAhead === 0 && eventDate <= now) eventDate.setDate(now.getDate() + 7);
+            if (daysAhead === 0 && eventDate <= now) {
+                eventDate.setDate(now.getDate() + 1);
+            }
             const diff = eventDate - now;
             if (diff > 0 && diff < bestDelta) bestDelta = diff;
         }
@@ -1081,7 +1071,7 @@
     function loadCalendar() {
         const tbody = document.querySelector("#calendarTable tbody");
         tbody.innerHTML = "";
-        calendarData.forEach(r => { const tr = document.createElement("tr"); tr.innerHTML = ` <td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td>`; tbody.appendChild(tr); });
+        calendarData.forEach(r => { const tr = document.createElement("tr"); tr.innerHTML = `  <td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td>`; tbody.appendChild(tr); });
     }
 
     function buildGuides() {
