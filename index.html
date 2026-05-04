@@ -631,6 +631,13 @@
             margin-top: 1rem;
             color: #6c757d;
         }
+        .support-card {
+            background: var(--accent-light);
+            border-radius: 20px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
         button {
             cursor: pointer;
         }
@@ -666,6 +673,7 @@
         <button class="tab-button" data-tab="resources">💰 Ресурсы</button>
         <button class="tab-button" data-tab="itemupgrade">⚡ Золотые вещи</button>
         <button class="tab-button" data-tab="guides">📖 Инструкции</button>
+        <button class="tab-button" data-tab="support">🙏 Спасибо</button>
     </div>
 
     <div class="tab-content active" id="tab-phases"><div id="phasesContainer"></div></div>
@@ -683,7 +691,7 @@
                 <div class="vs-item"><label>💀 Убийство/потеря</label><input type="number" id="vs_kill" value="0" step="5" class="vs-bonus"></div>
                 <div class="vs-item"><label>✨ Общий (все действия)</label><input type="number" id="vs_all" value="0" step="5" class="vs-bonus"></div>
             </div>
-            <div class="small-note">Бонусы суммируются. Пример: радар +50% + общий +100% = +150% → множитель 2.5. Очки пересчитываются автоматически.</div>
+            <div class="small-note">Бонусы суммируются. Очки пересчитываются автоматически.</div>
         </div>
         <div id="scoreContainer"></div>
     </div>
@@ -773,14 +781,36 @@
             <p style="font-size:0.8rem;">Введите текущий и целевой уровень. Стоимость в очищенных камнях и нефти.</p>
             <label>Текущий уровень: <input type="number" id="gearCur" value="0" min="0" max="39"></label>
             <label>Целевой уровень: <input type="number" id="gearTar" value="10" min="0" max="40"></label>
-            <button id="calcGearUpgrade">Рассчитать</button>
+            <button id="calcGearUpgrade">Рассчитать уровень</button>
             <div id="gearResult" class="resource-result">Очищенных камней: 0<br>Нефти: 0</div>
-            <div class="small-note">Таблица составлена на основе игровых данных (уровни до 40).</div>
+        </div>
+        <div class="upgrade-calc">
+            <h3>⭐ Прокачка звёзд (1⭐ и 2⭐)</h3>
+            <p style="font-size:0.8rem;">Для получения звезды нужно выполнить 5 улучшений по фиксированной цене.</p>
+            <label><input type="radio" name="starType" value="star1" checked> 1 звезда (5×12 000 камней, 5×145 кристаллов, 5×20 м нефти)</label>
+            <label><input type="radio" name="starType" value="star2"> 2 звезда (5×16 000 камней, 5×200 кристаллов, 5×30 м нефти)</label>
+            <button id="calcStarCost">Рассчитать стоимость звезды</button>
+            <div id="starResult" class="resource-result">Очищенных камней: 0<br>Проводящих кристаллов: 0<br>Нефти: 0</div>
         </div>
     </div>
 
     <div class="tab-content" id="tab-guides">
         <div id="guidesContainer" class="guides-container"></div>
+    </div>
+
+    <div class="tab-content" id="tab-support">
+        <div class="support-card">
+            <h3>🙏 Спасибо, что пользуетесь помощником!</h3>
+            <p>Если этот инструмент помогает вам в игре и вы хотите поддержать его развитие, вы можете сделать добровольное пожертвование. Все средства пойдут на поддержку серверов и создание новых гайдов.</p>
+            <p><strong>Важно:</strong> Пожертвование является добровольным и не даёт никаких преимуществ в игре или в использовании помощника. Вы можете пользоваться всеми функциями совершенно бесплатно.</p>
+            <p>Реквизиты для поддержки (РФ):</p>
+            <ul style="text-align: left; display: inline-block;">
+                <li>МТС: 2203 8302 4197 6290 </li>
+                <li>BOOSTY: https://boosty.to/peg40/donate</li>
+            </ul>
+            <p style="margin-top: 12px;">Или напишите в игре (потом добавим ТГ и мыло) <strong>РЕЗЕРВ</strong> для других способов.</p>
+            <p class="small-note" style="margin-top: 12px;">Данный сайт не является публичной офертой. Все платежи являются добровольными.</p>
+        </div>
     </div>
     <div class="small-note">ЕГО ПУШИСТЕЙШЕСТВО</div>
 </div>
@@ -944,8 +974,6 @@
         });
     }
 
-    const scoreData = {  };
-    async function loadScoreData() {  }
     function getBonusMultiplier(phase, map) {
         const all = parseFloat(document.getElementById("vs_all").value) || 0;
         let cat = 0;
@@ -1065,7 +1093,7 @@
             {title: "⚔️ Фаза 5: Боеготовность — совмещение ускорений", content: `<h4>Действия</h4><ul><li>Используйте ускорения постройки, исследований, тренировок.</li><li>Обучайте солдат в указанные интервалы (очки сразу).</li><li>Используйте переобучение (Т6→Т8) для экономии ускорений.</li></ul>`},
             {title: "🏆 Фаза 6: Рейд — безопасная война", content: `<h4>Подготовка</h4><ul><li>Купите щит, отключите оборону в гарнизоне.</li><li>Ресурсы держите в инвентаре, освободите госпиталь.</li></ul><h4>Во время рейда</h4><ul><li>Разведывайте цели, атакуйте, не обнуляйте базы без сопротивления.</li><li>Следите за HP базы, не телепортируйтесь в лагерь во время боя.</li></ul>`},
             {title: "🎯 Готовность к миссии: 18 сундуков без затрат", content: `<h4>Три события</h4><h4>1. Обучение солдат</h4><ul><li>Должность Министра обороны, перед событием лагеря пусты.</li><li>Тренируйте Т6, затем улучшайте до Т8 (дешевле).</li></ul><h4>2. Улучшение бойца</h4><ul><li>Тратьте энергию (~300 ед.), используйте бесплатное восстановление 2 раза.</li></ul><h4>3. Улучшение героя</h4><ul><li>Тратьте накопленный опыт и книги.</li></ul><p>Стройку и науку не трогайте — оставьте ускорения для Битвы Альянсов.</p>`},
-            {title: "📊 Аналитика событий", content: `<h4>Основные выводы</h4><ul><li>Главная сила сервера — активность в Состязании альянсов (VS) и массовость топ-игроков.</li><li>Слабые места: суммарный урон по Гигантскому боссу и активность в «Готовности к миссии».</li><li>Тактика: организовывать массовые атаки босса («зерг-раш»), контролировать грабежи транспортников (бить только целые фуры).</li><li>Для победы в войне серверов важна не столько сила отдельных китов, сколько скоординированность всех игроков.</li></ul><p>Используйте аналитику для планирования: уделяйте внимание боссу, не пропускайте сундуки готовности, контролируйте грабежи.</p>`}
+            {title: "📊 Аналитика событий (на основе данных сервера)", content: `<h4>Основные выводы</h4><ul><li>Главная сила сервера — активность в Состязании альянсов (VS) и массовость топ-игроков.</li><li>Слабые места: суммарный урон по Гигантскому боссу и активность в «Готовности к миссии».</li><li>Тактика: организовывать массовые атаки босса («зерг-раш»), контролировать грабежи транспортников (бить только целые фуры).</li><li>Для победы в войне серверов важна не столько сила отдельных китов, сколько скоординированность всех игроков.</li></ul><p>Используйте аналитику для планирования: уделяйте внимание боссу, не пропускайте сундуки готовности, контролируйте грабежи.</p>`}
         ];
         const cont = document.getElementById("guidesContainer");
         cont.innerHTML = "";
@@ -1190,6 +1218,21 @@
         document.getElementById("gearResult").innerHTML = `Очищенных камней: ${totalStone}<br>Нефти: ${totalOil.toLocaleString()}`;
     }
 
+    function calcStarCost() {
+        let star = document.querySelector('input[name="starType"]:checked').value;
+        let stone, crystals, oil;
+        if (star === "star1") {
+            stone = 12000 * 5;
+            crystals = 145 * 5;
+            oil = 20000000 * 5;
+        } else {
+            stone = 16000 * 5;
+            crystals = 200 * 5;
+            oil = 30000000 * 5;
+        }
+        document.getElementById("starResult").innerHTML = `Очищенных камней: ${stone}<br>Проводящих кристаллов: ${crystals}<br>Нефти: ${oil.toLocaleString()}`;
+    }
+
     document.addEventListener("DOMContentLoaded", () => {
         buildPhases(); buildScoreCalculator(); buildUpgrades(); buildGuides(); loadCalendar(); updateReminder();
         setInterval(() => { updateTimeDisplay(); updatePhaseTimers(); updateReminder(); }, 1000);
@@ -1207,6 +1250,7 @@
         updateResult();
         document.getElementById("convertBtn").onclick = convertComponent;
         document.getElementById("calcGearUpgrade").onclick = calcGearUpgrade;
+        document.getElementById("calcStarCost").onclick = calcStarCost;
         const themeToggle = document.getElementById("themeToggle"); let dark=false;
         themeToggle.onclick = () => { dark=!dark; document.body.classList.toggle("dark",dark); themeToggle.innerText=dark?"☀️ Светлая":"🌙 Тёмная"; };
         const tabBtns = document.querySelectorAll(".tab-button"), tabs = document.querySelectorAll(".tab-content");
