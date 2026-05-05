@@ -3,637 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
-    <title>Z Route: Redemption и ЕГО ПУШИСТЕЙШЕСТВО</title>
-    <style>
-        * {
-            box-sizing: border-box;
-            transition: background 0.2s, color 0.2s;
-        }
-        :root {
-            --bg: #f8f9fa;
-            --card: white;
-            --text: #1e2a3a;
-            --border: #e2e8f0;
-            --accent: #2c5a8c;
-            --accent-light: #eef2f7;
-            --warning-bg: #fff3e0;
-            --warning-border: #ff9800;
-            --urgent-bg: #ffcccc;
-            --urgent-text: #a00;
-            --progress-bg: #e2e8f0;
-            --progress-fill: #2c5a8c;
-            --score-row-bg: #ffffff;
-        }
-        body.dark {
-            --bg: #121212;
-            --card: #1e1e2f;
-            --text: #e2e8f0;
-            --border: #334155;
-            --accent: #4c9aff;
-            --accent-light: #2d2d3a;
-            --warning-bg: #2d2a1a;
-            --warning-border: #ffaa33;
-            --urgent-bg: #4a1a1a;
-            --urgent-text: #ff8888;
-            --progress-bg: #2d3748;
-            --progress-fill: #4c9aff;
-            --score-row-bg: #1e1e2f;
-        }
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            margin: 0;
-            padding: 12px;
-            font-size: 14px;
-            line-height: 1.4;
-        }
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        h1 {
-            text-align: center;
-            font-size: 1.6rem;
-            margin: 0 0 0.5rem;
-            color: var(--accent);
-        }
-        .theme-toggle {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 40px;
-            padding: 8px 12px;
-            cursor: pointer;
-            font-size: 1.2rem;
-            z-index: 1000;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-        }
-        .time-panel {
-            background: linear-gradient(135deg, var(--accent), #1e466e);
-            color: white;
-            border-radius: 20px;
-            margin-bottom: 1rem;
-            overflow: hidden;
-        }
-        .time-panel.collapsed .time-content {
-            display: none;
-        }
-        .time-panel-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.8rem 1rem;
-            cursor: pointer;
-            background: rgba(0,0,0,0.1);
-        }
-        .next-event {
-            font-size: 0.85rem;
-            font-weight: bold;
-            background: rgba(255,255,255,0.2);
-            padding: 0.3rem 0.8rem;
-            border-radius: 40px;
-            word-break: break-word;
-        }
-        .toggle-panel-btn {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.4rem;
-            cursor: pointer;
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-        }
-        .time-content {
-            padding: 0.5rem 1rem 1rem;
-        }
-        .time-stats {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.8rem;
-            justify-content: space-between;
-            align-items: baseline;
-        }
-        .time-stats div {
-            background: rgba(0,0,0,0.2);
-            padding: 0.2rem 0.8rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-        }
-        .phase-info {
-            background: rgba(0,0,0,0.2);
-            border-radius: 20px;
-            padding: 0.5rem 0.8rem;
-            margin-top: 8px;
-            font-size: 0.85rem;
-        }
-        .reminder {
-            background: var(--warning-bg);
-            border-left: 5px solid var(--warning-border);
-            padding: 0.6rem 1rem;
-            margin-bottom: 1rem;
-            border-radius: 12px;
-            font-size: 0.85rem;
-            color: var(--text);
-        }
-        .reminder strong {
-            display: block;
-            margin-bottom: 5px;
-        }
-        .reminder ul {
-            margin: 0;
-            padding-left: 20px;
-        }
-        .tabs {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.3rem;
-            margin-bottom: 1rem;
-            border-bottom: 2px solid var(--border);
-            background: var(--card);
-            border-radius: 20px 20px 0 0;
-            padding: 0.5rem 0.5rem 0;
-        }
-        .tab-button {
-            background: none;
-            border: none;
-            padding: 0.4rem 0.8rem;
-            font-size: 0.85rem;
-            cursor: pointer;
-            border-radius: 30px;
-            font-weight: 500;
-            color: var(--text);
-        }
-        .tab-button.active {
-            background: var(--accent);
-            color: white;
-        }
-        .tab-content {
-            display: none;
-            background: var(--card);
-            border-radius: 0 0 20px 20px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-        }
-        .tab-content.active {
-            display: block;
-        }
-        .phase-day-card {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            margin-bottom: 12px;
-            overflow: hidden;
-        }
-        .phase-day-header {
-            background: var(--accent-light);
-            padding: 10px 12px;
-            cursor: pointer;
-            font-weight: bold;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 6px;
-        }
-        .phase-day-header .day-name {
-            font-size: 1rem;
-            color: var(--accent);
-        }
-        .phase-day-header .day-tips {
-            font-size: 0.7rem;
-            background: rgba(44,90,140,0.1);
-            padding: 2px 10px;
-            border-radius: 20px;
-        }
-        .phase-day-header .toggle-icon {
-            font-size: 1.2rem;
-        }
-        .phase-day-content {
-            padding: 0;
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease;
-        }
-        .phase-day-card.open .phase-day-content {
-            max-height: 2000px;
-            padding: 12px;
-        }
-        .phase-name {
-            font-weight: bold;
-            font-size: 0.9rem;
-            margin-bottom: 8px;
-            color: var(--accent);
-            border-left: 3px solid var(--accent);
-            padding-left: 8px;
-        }
-        .event-card {
-            background: var(--bg);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            margin-bottom: 10px;
-            padding: 10px;
-        }
-        .event-points {
-            font-weight: 500;
-            margin: 0 0 4px 0;
-        }
-        .event-detail {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-between;
-            align-items: baseline;
-            margin-top: 6px;
-            gap: 6px;
-        }
-        .event-collab {
-            background: var(--accent-light);
-            padding: 2px 8px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-        }
-        .timer-cell {
-            font-family: monospace;
-            font-weight: bold;
-            white-space: nowrap;
-        }
-        .timer-cell.urgent {
-            background-color: var(--urgent-bg);
-            color: var(--urgent-text);
-            padding: 2px 6px;
-            border-radius: 20px;
-        }
-        .event-comment {
-            font-size: 0.75rem;
-            margin-top: 6px;
-        }
-        .score-calc {
-            margin-bottom: 20px;
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            overflow: hidden;
-        }
-        .score-header {
-            background: var(--accent-light);
-            padding: 10px 12px;
-            cursor: pointer;
-            font-weight: bold;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .score-content {
-            padding: 0;
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease;
-        }
-        .score-calc.open .score-content {
-            max-height: 2000px;
-            padding: 12px;
-        }
-        .score-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.85rem;
-        }
-        .score-table th, .score-table td {
-            padding: 6px;
-            text-align: left;
-            border-bottom: 1px solid var(--border);
-            background-color: var(--score-row-bg);
-        }
-        .score-table input {
-            width: 100px;
-            padding: 4px;
-            border-radius: 12px;
-            border: 1px solid var(--border);
-            background: var(--bg);
-            color: var(--text);
-            text-align: center;
-        }
-        .score-total {
-            margin-top: 10px;
-            font-weight: bold;
-            text-align: right;
-            padding: 8px;
-            background: var(--accent-light);
-            border-radius: 12px;
-        }
-        .vs-panel {
-            background: var(--accent-light);
-            border-radius: 16px;
-            padding: 12px;
-            margin-bottom: 20px;
-        }
-        .vs-panel h3 {
-            margin: 0 0 8px 0;
-            font-size: 1rem;
-            color: var(--text);
-        }
-        .vs-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-bottom: 12px;
-        }
-        .vs-item {
-            flex: 1;
-            min-width: 120px;
-        }
-        .vs-item label {
-            display: block;
-            font-size: 0.75rem;
-            margin-bottom: 2px;
-            color: var(--text);
-        }
-        .vs-item input {
-            width: 100%;
-            padding: 4px;
-            border-radius: 20px;
-            border: 1px solid var(--border);
-            background: var(--card);
-            color: var(--text);
-            text-align: center;
-        }
-        .progress-bar {
-            background: var(--progress-bg);
-            border-radius: 20px;
-            height: 20px;
-            margin: 8px 0;
-            position: relative;
-            overflow: hidden;
-        }
-        .progress-fill {
-            background: var(--progress-fill);
-            height: 100%;
-            width: 0%;
-            transition: width 0.3s;
-        }
-        .progress-marks {
-            position: relative;
-            height: 20px;
-            margin-top: -20px;
-            pointer-events: none;
-        }
-        .progress-marks span {
-            position: absolute;
-            width: 2px;
-            height: 20px;
-            background: white;
-            top: 0;
-            transform: translateX(-50%);
-        }
-        .progress-labels {
-            font-size: 0.7rem;
-            display: flex;
-            justify-content: space-between;
-            margin-top: 4px;
-        }
-        .score-progress {
-            margin-top: 8px;
-        }
-        .add-points {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-            margin-top: 8px;
-            justify-content: flex-end;
-        }
-        .add-points input {
-            width: 100px;
-            padding: 4px;
-            border-radius: 20px;
-            border: 1px solid var(--border);
-            background: var(--bg);
-            color: var(--text);
-            text-align: center;
-        }
-        .add-points button {
-            background: var(--accent);
-            color: white;
-            border: none;
-            padding: 4px 12px;
-            border-radius: 20px;
-            cursor: pointer;
-        }
-        .upgrade-selector {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 10px;
-            margin-bottom: 12px;
-        }
-        .upgrade-selector select {
-            width: 100%;
-            padding: 8px;
-            border-radius: 40px;
-            background: var(--bg);
-            border: 1px solid var(--border);
-            font-size: 0.9rem;
-            margin-top: 5px;
-            color: var(--text);
-        }
-        .upgrade-detail {
-            background: var(--bg);
-            border-radius: 12px;
-            padding: 10px;
-            margin-top: 8px;
-            color: var(--text);
-        }
-        .resource-calc {
-            background: var(--card);
-            border-radius: 20px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-        }
-        .resource-calc h3 {
-            margin-top: 0;
-            font-size: 1rem;
-            color: var(--text);
-        }
-        .resource-calc select, .resource-calc input, .resource-calc button {
-            width: 100%;
-            padding: 0.5rem;
-            margin: 0.5rem 0;
-            border-radius: 40px;
-            border: 1px solid var(--border);
-            background: var(--card);
-            color: var(--text);
-        }
-        .resource-calc button {
-            background: var(--accent);
-            color: white;
-            cursor: pointer;
-        }
-        .resource-result {
-            background: var(--card);
-            padding: 0.6rem;
-            border-radius: 40px;
-            text-align: center;
-            font-weight: bold;
-            margin-top: 0.5rem;
-            color: var(--text);
-            border: 1px solid var(--border);
-        }
-        .guides-container {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        .guide-card {
-            background: var(--accent-light);
-            border-radius: 16px;
-            overflow: hidden;
-        }
-        .guide-header {
-            background: var(--card);
-            padding: 12px;
-            cursor: pointer;
-            font-weight: bold;
-            display: flex;
-            justify-content: space-between;
-            border-bottom: 1px solid var(--border);
-            color: var(--text);
-        }
-        .guide-content {
-            padding: 0 12px;
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s;
-        }
-        .guide-card.open .guide-content {
-            max-height: 2000px;
-            padding: 12px;
-        }
-        .guide-content ul, .guide-content p {
-            margin: 8px 0;
-            color: var(--text);
-        }
-        .upgrade-calc {
-            background: var(--card);
-            border-radius: 20px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-        }
-        .upgrade-calc label {
-            display: block;
-            margin: 8px 0;
-            color: var(--text);
-        }
-        .upgrade-calc input {
-            width: 100%;
-            padding: 0.5rem;
-            border-radius: 40px;
-            border: 1px solid var(--border);
-            background: var(--bg);
-            color: var(--text);
-            margin-top: 4px;
-        }
-        .upgrade-calc button {
-            background: var(--accent);
-            color: white;
-            border: none;
-            padding: 8px;
-            border-radius: 40px;
-            cursor: pointer;
-            width: 100%;
-            margin: 12px 0;
-        }
-        .calculator {
-            background: var(--card);
-            border-radius: 20px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-        }
-        .calculator-header {
-            display: flex;
-            justify-content: space-between;
-            cursor: pointer;
-            color: var(--text);
-        }
-        .calc-body {
-            overflow: hidden;
-            transition: max-height 0.3s;
-        }
-        .calc-body.collapsed {
-            max-height: 0 !important;
-            padding: 0;
-        }
-        .start-time {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-        }
-        .start-time label {
-            display: flex;
-            align-items: center;
-            gap: 0.3rem;
-            background: var(--accent-light);
-            padding: 0.2rem 0.8rem;
-            border-radius: 40px;
-        }
-        .start-time input {
-            width: 50px;
-            padding: 0.2rem;
-            border-radius: 20px;
-            border: 1px solid var(--border);
-            text-align: center;
-            background: var(--bg);
-            color: var(--text);
-        }
-        .mode label {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.3rem;
-            margin-right: 1rem;
-            color: var(--text);
-        }
-        .add-item label {
-            font-size: 0.7rem;
-            color: var(--text);
-        }
-        .items-list li {
-            color: var(--text);
-        }
-        .result {
-            background: var(--accent-light);
-            color: var(--text);
-        }
-        .reset-btn {
-            background: #dc3545;
-            color: white;
-        }
-        .support-card {
-            background: var(--accent-light);
-            border-radius: 20px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            text-align: center;
-            color: var(--text);
-        }
-        .support-card a {
-            color: var(--accent);
-        }
-        button {
-            cursor: pointer;
-        }
-        .small-note {
-            font-size: 0.7rem;
-            color: #6c757d;
-            margin-top: 1rem;
-            text-align: center;
-        }
-    </style>
+    <title>Z Route: Redemption · ЕГО ПУШИСТЕЙШЕСТВО</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="container">
-    <h1>Z Route: Redemption и ЕГО ПУШИСТЕЙШЕСТВО</h1>
+    <h1 class="main-title">
+        <span class="title-line">Z Route: Redemption</span>
+        <span class="title-line"><span class="paw">🐾</span> ЕГО ПУШИСТЕЙШЕСТВО <span class="paw">🐾</span></span>
+    </h1>
     <button class="theme-toggle" id="themeToggle">🌙 Тёмная</button>
 
     <div class="time-panel" id="timePanel">
@@ -643,13 +21,14 @@
         </div>
         <div class="time-content" id="timeContent">
             <div class="time-stats">
-                <div>🕒 Текущее время: <span id="localTime"></span></div>
-                <div>📅 Игровой день: <span id="gameDay"></span> (<span id="weekdayName"></span>)</div>
+                <div>🕒 <span id="localTime"></span></div>
+                <div>📅 День <span id="gameDay"></span> (<span id="weekdayName"></span>)</div>
             </div>
             <div class="phase-info" id="phaseInfo">⏳ До следующей фазы: загрузка...</div>
         </div>
     </div>
 
+    <div class="event-timers" id="eventTimers"></div>
     <div id="reminder" class="reminder"></div>
 
     <div class="tabs">
@@ -661,11 +40,10 @@
         <button class="tab-button" data-tab="resources">💰 Ресурсы</button>
         <button class="tab-button" data-tab="itemupgrade">⚡ Золотые вещи</button>
         <button class="tab-button" data-tab="guides">📖 Инструкции</button>
-        <button class="tab-button" data-tab="support">🙏 Спасибо</button>
+        <button class="tab-button support" data-tab="support">🙏 Спасибо</button>
     </div>
 
     <div class="tab-content active" id="tab-phases"><div id="phasesContainer"></div></div>
-    
     <div class="tab-content" id="tab-score">
         <div class="vs-panel">
             <h3>⚙️ Технологии VS (бонусы в %)</h3>
@@ -685,16 +63,7 @@
     </div>
 
     <div class="tab-content" id="tab-upgrades"><div id="upgradesContainer"></div></div>
-    
-    <div class="tab-content" id="tab-calendar">
-        <div class="table-wrapper" style="overflow-x:auto;">
-            <table id="calendarTable" style="min-width:300px; width:100%; border-collapse:collapse;">
-                <thead><th>День</th><th>Время</th><th>Событие</th></thead>
-                <tbody></tbody>
-            </table>
-        </div>
-    </div>
-
+    <div class="tab-content" id="tab-calendar"><div id="calendarGroups"></div></div>
     <div class="tab-content" id="tab-timecalc">
         <div class="calculator">
             <div class="calculator-header" id="toggleCalculator">
@@ -714,20 +83,20 @@
                     <label><input type="radio" name="mode" value="subtract"> ➖ Вычесть</label>
                 </div>
                 <div class="add-item">
-                    <label>Количество <input type="number" id="itemQty" value="1" min="1"></label>
-                    <label>Длительность
+                    <label>Кол-во <input type="number" id="itemQty" value="1" min="1"></label>
+                    <label>Длит.
                         <select id="durationSelect">
-                            <option value="1">1 минута</option><option value="5">5 минут</option>
+                            <option value="1">1 мин</option><option value="5">5 мин</option>
                             <option value="60">1 час</option><option value="240">4 часа</option>
                             <option value="480">8 часов</option>
                         </select>
                     </label>
-                    <button id="addItemBtn">➕ Добавить</button>
-                    <button id="editItemBtn">✏️ Редактировать</button>
-                    <button id="delItemBtn">🗑️ Удалить</button>
+                    <button id="addItemBtn">➕</button>
+                    <button id="editItemBtn">✏️</button>
+                    <button id="delItemBtn">🗑️</button>
                 </div>
                 <div class="items-list">
-                    <div style="font-weight:bold;">📦 Предметы (клик для выбора):</div>
+                    <div class="items-list-header">📦 Предметы (клик для выбора):</div>
                     <ul id="itemsList"></ul>
                 </div>
                 <div class="result" id="resultTime">0 дн 0 ч 0 мин 0 сек</div>
@@ -739,8 +108,8 @@
     <div class="tab-content" id="tab-resources">
         <div class="resource-calc">
             <h3>🔁 Конвертация компонентов</h3>
-            <p style="font-size:0.8rem;">Цепочка: 4 Стали → 1 Стальной компонент → 4 → Жаропрочное золото → 4 → Композитный материал → 4 → Проводящий кристалл (1 кристалл = 256 стали).</p>
-            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <p>Цепочка: 4 Стали ▸ 1 Стальной компонент ▸ 4 ▸ Жаропрочное золото ▸ 4 ▸ Композитный материал ▸ 4 ▸ Проводящий кристалл (1 кристалл = 256 стали).</p>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
                 <select id="convFrom" style="width: 40%;">
                     <option value="steel">Сталь</option>
                     <option value="steelComp">Стальной компонент</option>
@@ -748,7 +117,7 @@
                     <option value="composite">Композитный материал</option>
                     <option value="crystal">Проводящий кристалл</option>
                 </select>
-                <span style="line-height: 2rem;">→</span>
+                <span style="font-size: 1.2rem; font-weight: bold;">▸</span>
                 <select id="convTo" style="width: 40%;">
                     <option value="crystal">Проводящий кристалл</option>
                     <option value="composite">Композитный материал</option>
@@ -765,8 +134,8 @@
 
     <div class="tab-content" id="tab-itemupgrade">
         <div class="upgrade-calc">
-            <h3>⚡ Прокачка золотых вещей (уровни 0–40)</h3>
-            <p style="font-size:0.8rem;">Введите текущий и целевой уровень. Стоимость в очищенных камнях и нефти.</p>
+            <h3>⚡ Прокачка золотых вещей (0–40)</h3>
+            <p>Введите текущий и целевой уровень. Стоимость в очищенных камнях и нефти.</p>
             <label>Текущий уровень: <input type="number" id="gearCur" value="0" min="0" max="39"></label>
             <label>Целевой уровень: <input type="number" id="gearTar" value="10" min="0" max="40"></label>
             <button id="calcGearUpgrade">Рассчитать уровень</button>
@@ -774,9 +143,19 @@
         </div>
         <div class="upgrade-calc">
             <h3>⭐ Прокачка звёзд (1⭐ и 2⭐)</h3>
-            <p style="font-size:0.8rem;">Для получения звезды нужно выполнить 5 улучшений по фиксированной цене.</p>
-            <label><input type="radio" name="starType" value="star1" checked> 1 звезда (5×12 000 камней, 5×145 кристаллов, 5×20 м нефти)</label>
-            <label><input type="radio" name="starType" value="star2"> 2 звезда (5×16 000 камней, 5×200 кристаллов, 5×30 м нефти)</label>
+            <p>Для получения звезды нужно выполнить 5 улучшений по фиксированной цене.</p>
+            <div class="radio-group">
+                <label class="radio-custom">
+                    <input type="radio" name="starType" value="star1" checked>
+                    <span class="radio-checkmark"></span>
+                    1 звезда (5×12 000 камней, 5×145 кристаллов, 5×20 м нефти)
+                </label>
+                <label class="radio-custom">
+                    <input type="radio" name="starType" value="star2">
+                    <span class="radio-checkmark"></span>
+                    2 звезда (5×16 000 камней, 5×200 кристаллов, 5×30 м нефти)
+                </label>
+            </div>
             <button id="calcStarCost">Рассчитать стоимость звезды</button>
             <div id="starResult" class="resource-result">Очищенных камней: 0<br>Проводящих кристаллов: 0<br>Нефти: 0</div>
         </div>
@@ -800,452 +179,10 @@
             <p class="small-note" style="margin-top: 12px;">Данный сайт не является публичной офертой. Все платежи являются добровольными.</p>
         </div>
     </div>
-    <div class="small-note">ЕГО ПУШИСТЕЙШЕСТВО</div>
+    <div class="small-note">
+        <a href="https://boosty.to/peg40/donate" target="_blank" class="paw-link">🐾 ЕГО ПУШИСТЕЙШЕСТВО 🐾</a>
+    </div>
 </div>
-
-<script>
-    document.addEventListener('contextmenu', e => e.preventDefault());
-    document.addEventListener('keydown', e => { if (e.ctrlKey && (e.key === 'u' || e.key === 's' || e.key === 'c' || e.key === 'i' || e.key === 'j')) e.preventDefault(); });
-
-    const calendarData = [
-        ["День 1","09:00:00","Строительство Базы"],["День 1","13:00:00","Обучить Солдат"],["День 1","17:00:00","Исследования технологий"],["День 1","21:00:00","Улучшение бойца"],["День 1","01:00:00","Улучшение Героя"],["День 1","05:00:00","Строительство Базы"],
-        ["День 2","09:00:00","Улучшение Героя"],["День 2","13:00:00","Строительство Базы"],["День 2","17:00:00","Обучить Солдат"],["День 2","21:00:00","Исследования технологий"],["День 2","01:00:00","Улучшение бойца"],["День 2","05:00:00","Улучшение Героя"],
-        ["День 3","09:00:00","Строительство Базы"],["День 3","13:00:00","Обучить Солдат"],["День 3","17:00:00","Исследования технологий"],["День 3","21:00:00","Улучшение бойца"],["День 3","01:00:00","Улучшение Героя"],["День 3","05:00:00","Строительство Базы"],
-        ["День 4","09:00:00","Обучить Солдат"],["День 4","13:00:00","Исследования технологий"],["День 4","17:00:00","Улучшение бойца"],["День 4","21:00:00","Улучшение Героя"],["День 4","01:00:00","Строительство Базы"],["День 4","05:00:00","Обучить Солдат"],
-        ["День 5","09:00:00","Исследования технологий"],["День 5","13:00:00","Улучшение бойца"],["День 5","17:00:00","Улучшение Героя"],["День 5","21:00:00","Строительство Базы"],["День 5","01:00:00","Обучить Солдат"],["День 5","05:00:00","Исследования технологий"],
-        ["День 6","09:00:00","Улучшение бойца"],["День 6","13:00:00","Улучшение Героя"],["День 6","17:00:00","Строительство Базы"],["День 6","21:00:00","Обучить Солдат"],["День 6","01:00:00","Исследования технологий"],["День 6","05:00:00","Улучшение бойца"],
-        ["День 7","09:00:00","Улучшение Героя"],["День 7","13:00:00","Строительство Базы"],["День 7","17:00:00","Обучить Солдат"],["День 7","21:00:00","Исследования технологий"],["День 7","01:00:00","Улучшение бойца"],["День 7","05:00:00","Улучшение Героя"]
-    ];
-
-    const phasesRaw = [
-        ["Воскресенье", "", "События радара (Копим на завтра)", "", "Отправляем в ночь отряды на сбор ресурсов.", ""],
-        ["Понедельник", "Фаза 1. Радар", "Завершить событие Радара", "Улучшение бойца", "Сразу выполняйте накопленные задания радара.", "Улучшение бойца"],
-        ["", "", "Использовать 1 Часть бойца", "Улучшение бойца", "Используйте части бойцов.", "Улучшение бойца"],
-        ["", "", "Использовать 1 Боевой чип бойца", "Улучшение бойца", "Используйте боевые чипы.", "Улучшение бойца"],
-        ["", "", "Потратить 1 Выносливость", "Улучшение бойца", "Тратьте выносливость на задания радара.", "Улучшение бойца"],
-        ["", "", "Использовать 660 опыта Героя", "Улучшение героя", "Приберечь для фазы героя.", "Улучшение Героя"],
-        ["", "", "Сбор 100 ед. ресурсов", "", "Как только отряды вернулись — сразу отправляйте их снова на сбор.", ""],
-        ["Вторник", "Фаза 2. Строительство", "Использовать 1 минуту ускорения постройки", "Строить Базу", "Завершите заранее начатые стройки.", "Строительство Базы"],
-        ["", "", "Завершить постройку за +1 Мощь", "Строить Базу", "Используйте ускорения постройки.", "Строительство Базы"],
-        ["", "", "Выполнить 1 оранжевую миссию", "", "Используйте жетоны для поиска.", ""],
-        ["", "", "Отправить 1 Легендарный Транспортник", "", "Используйте контракты конвоя.", ""],
-        ["", "", "", "", "События радара (Копим на завтра).", ""],
-        ["Среда", "Фаза 3. Технологии", "Завершить событие Радара", "Исследование технологий", "Закройте все доступные события радара.", "Исследования технологий"],
-        ["", "", "Использовать 1 минуту ускорения исследования", "Исследование технологий", "Используйте ускорения исследований.", "Исследования технологий"],
-        ["", "", "Завершить исследование за +1 Силу", "Исследование технологий", "Завершайте самые долгие технологии.", "Исследования технологий"],
-        ["", "", "Потратить 1 Научные данные", "", "Тратьте научные данные.", ""],
-        ["", "", "Открыть сундук с компонентами бойца", "", "Откройте все накопленные сундуки.", ""],
-        ["Четверг", "Фаза 4. Герой", "Использовать 660 опыта Героя", "Улучшение героя", "Используйте опыт героя.", "Улучшение Героя"],
-        ["", "", "Использовать карту найма героя", "Улучшение героя", "Используйте карты найма первыми.", "Улучшение Героя"],
-        ["", "", "Фрагмент героя или универс. (Мифический)", "", "Тратьте мифические фрагменты.", ""],
-        ["", "", "Фрагмент героя или универс. (Эпический)", "", "Тратьте эпические фрагменты.", ""],
-        ["", "", "Фрагмент героя или универс. (Редкий)", "", "Тратьте редкие фрагменты.", ""],
-        ["", "", "Использовать книгу навыков", "", "Примените книги навыков.", ""],
-        ["", "", "", "", "События радара (Копим на завтра).", ""],
-        ["Пятница", "Фаза 5. Боеготовность", "Завершить событие Радара", "Строить Базу", "Закройте радар.", "Строительство Базы"],
-        ["", "", "Использовать 1 минуту ускорения постройки", "Строить Базу", "Используйте ускорения постройки.", "Строительство Базы"],
-        ["", "", "Завершить постройку за +1 Мощь", "Строить Базу", "Завершайте стройки.", "Строительство Базы"],
-        ["", "", "Использовать 1 минуту ускорения исследования", "Исследование технологий", "Используйте ускорения исследований.", "Исследования технологий"],
-        ["", "", "Завершить исследование за +1 Силу", "Исследование технологий", "Завершайте исследования.", "Исследования технологий"],
-        ["", "", "Использовать 1 минуту ускорения тренировок", "Подготовка солдат", "Используйте ускорения тренировок.", "Обучить Солдат"],
-        ["", "", "Обучить солдат", "Подготовка солдат", "Начинайте обучение солдат (очки сразу).", ""],
-        ["Суббота", "Фаза 6. Рейд", "Использовать 1 минуту ускорения постройки", "Улучшение бойца", "Используйте оставшиеся ускорения постройки.", "Улучшение бойца"],
-        ["", "", "Использовать 1 минуту ускорения исследования", "Улучшение Героя", "Используйте оставшиеся ускорения исследований.", "Улучшение Героя"],
-        ["", "", "Использовать 1 минуту ускорения тренировок", "Строительство Базы", "Используйте оставшиеся ускорения тренировок.", "Строительство Базы"],
-        ["", "", "Использовать 1 минуту ускорения лечения", "Обучить Солдат", "Используйте ускорения лечения.", "Обучить Солдат"],
-        ["", "", "Убийство солдат противника", "Исследования технологий", "Атакуйте базы, убивайте солдат.", "Исследования технологий"],
-        ["", "", "Смерть своих солдат", "Улучшение бойца", "Не бойтесь потерь — они дают очки.", "Улучшение бойца"]
-    ];
-
-    const upgradesData = [
-        [1,"—","—"],[2,"Полигон (Ур.1)","Парковка (Ур.1)"],[3,"Линия обороны (Ур.2)","—"],[4,"Тренировочный лагерь солдат (Ур.3)","Полигон (Ур.3)"],[5,"Линия обороны (Ур.4)","Тренировочный лагерь солдат (Ур.4)"],[6,"Линия обороны (Ур.5)","Полигон (Ур.5)"],[7,"Линия обороны (Ур.6)","Центр подготовки (по классу) (Ур.6)"],[8,"Отдел альфа-исследований (Ур.7)","Центр альянса (Ур.7)"],[9,"Отдел альфа-исследований (Ур.8)","Центр подготовки (по классу) (Ур.8)"],[10,"Отдел альфа-исследований (Ур.9)","Госпиталь (Ур.9)"],[11,"Отдел альфа-исследований (Ур.10)","Линия обороны (Ур.10)"],[12,"Отдел альфа-исследований (Ур.11)","Тренировочный лагерь солдат (Ур.11)"],[13,"Отдел альфа-исследований (Ур.12)","Центр подготовки (по классу) (Ур.12)"],[14,"Отдел альфа-исследований (Ур.13)","Полигон (Ур.13)"],[15,"Отдел альфа-исследований (Ур.14)","Линия обороны (Ур.14)"],[16,"Отдел альфа-исследований (Ур.15)","Центр альянса (Ур.15)"],[17,"Отдел альфа-исследований (Ур.16)","Центр подготовки (по классу) (Ур.16)"],[18,"Отдел альфа-исследований (Ур.17)","Госпиталь (Ур.17)"],[19,"Отдел альфа-исследований (Ур.18)","Линия обороны (Ур.18)"],[20,"Отдел альфа-исследований (Ур.19)","Тренировочный лагерь солдат (Ур.19)"],[21,"Отдел альфа-исследований (Ур.20)","Центр подготовки (по классу) (Ур.20)"],[22,"Отдел альфа-исследований (Ур.21)","Полигон (Ур.21)"],[23,"Отдел альфа-исследований (Ур.22)","Линия обороны (Ур.22)"],[24,"Отдел альфа-исследований (Ур.23)","Центр альянса (Ур.23)"],[25,"Отдел альфа-исследований (Ур.24)","Центр подготовки (по классу) (Ур.24)"],[26,"Отдел альфа-исследований (Ур.25)","Госпиталь (Ур.25)"],[27,"Отдел альфа-исследований (Ур.26)","Линия обороны (Ур.26)"],[28,"Отдел альфа-исследований (Ур.27)","Тренировочный лагерь солдат (Ур.27)"],[29,"Отдел альфа-исследований (Ур.28)","Центр подготовки (по классу) (Ур.28)"],[30,"Отдел альфа-исследований (Ур.29)","Полигон (Ур.29)"]
-    ];
-
-    const rewardThresholds = [38000, 145000, 550000, 650000, 1020000, 2280000, 2630000, 3620000, 7190000];
-
-    const gearUpgradeCost = [
-        { from:0, to:1, stone:1000, oil:220000 },{ from:1, to:2, stone:1000, oil:220000 },{ from:2, to:3, stone:2000, oil:220000 },
-        { from:3, to:4, stone:2000, oil:220000 },{ from:4, to:5, stone:2500, oil:330000 },{ from:5, to:6, stone:2500, oil:330000 },
-        { from:6, to:7, stone:2500, oil:330000 },{ from:7, to:8, stone:2500, oil:330000 },{ from:8, to:9, stone:3000, oil:440000 },
-        { from:9, to:10, stone:3000, oil:440000 },{ from:10, to:11, stone:3000, oil:440000 },{ from:11, to:12, stone:3000, oil:440000 },
-        { from:12, to:13, stone:3500, oil:550000 },{ from:13, to:14, stone:3500, oil:550000 },{ from:14, to:15, stone:3500, oil:550000 },
-        { from:15, to:16, stone:3500, oil:550000 },{ from:16, to:17, stone:4500, oil:660000 },{ from:17, to:18, stone:4500, oil:660000 },
-        { from:18, to:19, stone:4500, oil:660000 },{ from:19, to:20, stone:4500, oil:660000 },{ from:20, to:21, stone:5000, oil:770000 },
-        { from:21, to:22, stone:5000, oil:770000 },{ from:22, to:23, stone:5000, oil:770000 },{ from:23, to:24, stone:5000, oil:770000 },
-        { from:24, to:25, stone:6000, oil:880000 },{ from:25, to:26, stone:6000, oil:880000 },{ from:26, to:27, stone:6000, oil:880000 },
-        { from:27, to:28, stone:6000, oil:880000 },{ from:28, to:29, stone:7000, oil:990000 },{ from:29, to:30, stone:7000, oil:990000 },
-        { from:30, to:31, stone:7000, oil:990000 },{ from:31, to:32, stone:7000, oil:990000 },{ from:32, to:33, stone:7500, oil:1100000 },
-        { from:33, to:34, stone:7500, oil:1100000 },{ from:34, to:35, stone:7500, oil:1100000 },{ from:35, to:36, stone:7500, oil:1100000 },
-        { from:36, to:37, stone:8000, oil:1200000 },{ from:37, to:38, stone:8000, oil:1200000 },{ from:38, to:39, stone:8500, oil:1300000 },
-        { from:39, to:40, stone:8500, oil:1300000 }
-    ];
-
-    function getGameDay() { const d = new Date().getDay(); return {0:1,1:2,2:3,3:4,4:5,5:6,6:7}[d]; }
-    function getWeekdayName() { return ["Воскресенье","Понедельник","Вторник","Среда","Четверг","Пятница","Суббота"][new Date().getDay()]; }
-    function formatTime(seconds) { if (seconds<0) seconds=0; const d=Math.floor(seconds/86400); seconds%=86400; const h=Math.floor(seconds/3600); seconds%=3600; const m=Math.floor(seconds/60); const s=seconds%60; return `${d} дн ${h} ч ${m} мин ${s} сек`; }
-
-    function getNextEventForCollab(eventPattern) {
-        if (!eventPattern) return null;
-        const now = new Date();
-        const gd = getGameDay();
-        let bestDelta = Infinity;
-        for (let [d,t,e] of calendarData) {
-            if (!e.includes(eventPattern)) continue;
-            const dn = parseInt(d.split(" ")[1]);
-            const [h,m,s] = t.split(":").map(Number);
-            let eventDate = new Date(now);
-            eventDate.setHours(h,m,s,0);
-            let daysAhead = (dn - gd + 7) % 7;
-            eventDate.setDate(now.getDate() + daysAhead);
-            if (daysAhead === 0 && eventDate <= now) {
-                eventDate.setDate(now.getDate() + 1);
-            }
-            const diff = eventDate - now;
-            if (diff > 0 && diff < bestDelta) bestDelta = diff;
-        }
-        if (bestDelta !== Infinity) {
-            const ts = Math.floor(bestDelta / 1000);
-            return { hours: Math.floor(ts/3600), minutes: Math.floor((ts%3600)/60), seconds: ts%60, totalSec: ts };
-        }
-        return null;
-    }
-
-    function buildPhases() {
-        const container = document.getElementById("phasesContainer");
-        container.innerHTML = "";
-        let groups = [], lastDay = "";
-        for (let row of phasesRaw) {
-            const day = row[0] || lastDay;
-            if (row[0]) lastDay = day;
-            let group = groups.find(g => g.day === day);
-            if (!group) { group = { day, rows: [] }; groups.push(group); }
-            group.rows.push({ phaseName: row[1], points: row[2], collab: row[3], comment: row[4], timerEvent: row[5] });
-        }
-        groups.forEach(group => {
-            let phaseTitle = "";
-            for (let r of group.rows) if (r.phaseName && r.phaseName !== "") { phaseTitle = r.phaseName; break; }
-            const card = document.createElement("div"); card.className = "phase-day-card";
-            const header = document.createElement("div"); header.className = "phase-day-header";
-            const daySpan = document.createElement("span"); daySpan.className = "day-name"; daySpan.innerText = group.day;
-            const tipsSpan = document.createElement("span"); tipsSpan.className = "day-tips";
-            if (group.day === "Воскресенье") tipsSpan.innerText = "📡 Копим радар";
-            else if (group.day === "Понедельник") tipsSpan.innerText = "🎯 Радар + сбор";
-            else if (group.day === "Вторник") tipsSpan.innerText = "🏗️ Стройка";
-            else if (group.day === "Среда") tipsSpan.innerText = "🔬 Технологии";
-            else if (group.day === "Четверг") tipsSpan.innerText = "🦸 Герои";
-            else if (group.day === "Пятница") tipsSpan.innerText = "⚔️ Боеготовность";
-            else if (group.day === "Суббота") tipsSpan.innerText = "🏆 Рейд";
-            else tipsSpan.innerText = "💡";
-            const icon = document.createElement("span"); icon.className = "toggle-icon"; icon.innerText = "▼";
-            header.appendChild(daySpan); header.appendChild(tipsSpan); header.appendChild(icon);
-            header.onclick = () => { card.classList.toggle("open"); const i = header.querySelector(".toggle-icon"); i.innerText = card.classList.contains("open") ? "▲" : "▼"; };
-            const content = document.createElement("div"); content.className = "phase-day-content";
-            if (phaseTitle) { const phaseNameDiv = document.createElement("div"); phaseNameDiv.className = "phase-name"; phaseNameDiv.innerText = phaseTitle; content.appendChild(phaseNameDiv); }
-            group.rows.forEach(row => {
-                if (!row.points && !row.collab && !row.comment) return;
-                const evCard = document.createElement("div"); evCard.className = "event-card";
-                let html = `<div class="event-points"><strong>${row.points || ""}</strong></div>`;
-                if (row.collab) html += `<div class="event-detail"><span class="event-collab">🤝 ${row.collab}</span><span class="timer-cell" data-timer-event="${row.timerEvent || ""}">--</span></div>`;
-                if (row.comment) html += `<div class="event-comment">💡 ${row.comment}</div>`;
-                evCard.innerHTML = html;
-                content.appendChild(evCard);
-            });
-            card.appendChild(header); card.appendChild(content); container.appendChild(card);
-        });
-    }
-
-    function updatePhaseTimers() {
-        document.querySelectorAll(".timer-cell").forEach(cell => {
-            const pat = cell.dataset.timerEvent;
-            if (!pat) { cell.innerText = ""; cell.classList.remove("urgent"); return; }
-            const t = getNextEventForCollab(pat);
-            if (t) { cell.innerText = `${t.hours}ч ${t.minutes}м ${t.seconds}с`; if (t.totalSec < 3600) cell.classList.add("urgent"); else cell.classList.remove("urgent"); }
-            else { cell.innerText = "—"; cell.classList.remove("urgent"); }
-        });
-    }
-
-    function getBonusMultiplier(phase, map) {
-        const all = parseFloat(document.getElementById("vs_all").value) || 0;
-        let cat = 0;
-        if (map[phase]) cat = parseFloat(document.getElementById(map[phase]).value) || 0;
-        return 1 + (all + cat) / 100;
-    }
-
-    function updateScoreForPhase(phase, map, customPoints = null) {
-        let total = 0;
-        const mult = getBonusMultiplier(phase, map);
-        const inputs = document.querySelectorAll(`.score-input[data-phase="${phase}"]`);
-        inputs.forEach(inp => {
-            const action = inp.dataset.action;
-            let val = parseFloat(inp.value) || 0;
-            let base = parseFloat(inp.dataset.base);
-            if (action === "experience") val = Math.floor(val / 660);
-            else if (action === "food" || action === "metal") val = Math.floor(val / 100);
-            else if (action === "oil") val = Math.floor(val / 60);
-            const rowTotal = val * base * mult;
-            const totalCell = document.getElementById(`total_${phase}_${inp.id.split('_')[1]}`);
-            if (totalCell) totalCell.innerText = Math.floor(rowTotal);
-            total += rowTotal;
-        });
-        if (customPoints !== null) total += customPoints;
-        const totalDiv = document.getElementById(`total_${phase}`);
-        if (totalDiv) totalDiv.innerText = `Итого: ${Math.floor(total)} очков`;
-        const progDiv = document.getElementById(`progress_${phase}`);
-        if (progDiv) {
-            let filled = Math.floor(total);
-            let next = rewardThresholds.find(t => t > filled) || rewardThresholds[rewardThresholds.length-1];
-            let percent = Math.min(100, (filled / next) * 100);
-            progDiv.querySelector(".progress-fill").style.width = `${percent}%`;
-            let marks = "";
-            rewardThresholds.forEach(t => { if (t <= next) marks += `<span style="left: ${(t/next)*100}%;"></span>`; });
-            progDiv.querySelector(".progress-marks").innerHTML = marks;
-            let idx = rewardThresholds.findIndex(t => t > filled);
-            if (idx !== -1) progDiv.querySelector(".progress-labels").innerHTML = `${filled.toLocaleString()} / ${rewardThresholds[idx].toLocaleString()}<br>Следующий сундук: ${rewardThresholds[idx].toLocaleString()}`;
-            else progDiv.querySelector(".progress-labels").innerHTML = `${filled.toLocaleString()} / Все сундуки получены!`;
-        }
-    }
-
-    function buildScoreCalculator() {
-        const container = document.getElementById("scoreContainer");
-        container.innerHTML = "";
-        const phases = ["Радар", "Строительство", "Технологии", "Герой", "Боеготовность", "Рейд"];
-        const categoryMap = { "Радар":"vs_radar","Строительство":"vs_build","Технологии":"vs_research","Герой":"vs_hire","Боеготовность":"vs_train","Рейд":"vs_kill" };
-        const actionMap = { "Использовать 660 опыта Героя":"experience","Собрать 100 ед. еды":"food","Собрать 100 ед. металла":"metal","Собрать 60 ед. нефти":"oil" };
-        const baseScore = {
-            "Радар":[["Потратить 1 Выносливость",150],["Выполнить задание Радара",10000],["Использовать 660 опыта Героя",1],["Набор с алмазами [1 алмаз]",30],["Собрать 100 ед. еды",20],["Собрать 100 ед. металла",20],["Собрать 60 ед. нефти",20],["Использовать 1 Боевой чип бойца",3],["Использовать 1 Часть бойца",2500]],
-            "Строительство":[["Набор с алмазами [1 алмаз]",30],["За каждую минуту ускорения постройки",60],["За каждую постройку +1 Мощь",10],["Выполнить 1 оранжевую миссию Спецопераций",75000],["Отправить 1 Легендарный Транспортник",100000],["Провести 1 призыв выжившего",1500]],
-            "Технологии":[["Завершить событие Радара",10000],["Использовать 1 минуту ускорения исследования",60],["Завершить исследование за +1 Силу",10],["Потратить 1 Научные данные",100],["Открыть сундук с компонентами бойца",500]],
-            "Герой":[["Использовать 660 опыта Героя",1],["Набор с алмазами [1 алмаз]",30],["Нанять героя 1 раз",1500],["Использовать 1 Мифический Осколок Героя",10000],["Использовать 1 Эпический Осколок Героя",3500],["Использовать 1 Редкий Осколок Героя",1000],["Использовать 1 Книгу опыта навыков",10]],
-            "Боеготовность":[["Выполнить задание Радара",10000],["Набор с алмазами [1 алмаз]",30],["За каждую минуту ускорения постройки",60],["За каждую постройку +1 Мощь",10],["За каждую минуту ускорения исследований",60],["За каждое исследование +1 Сила",10],["Ускорение тренировок (1 мин.)",60],["Обучить Т1 Солдата",20],["Обучить Т2 Солдата",30],["Обучить Солдата Т3",40],["Обучить Солдата Т4",50],["Обучить Солдата Т5",60],["Обучить Солдата Т6",70],["Обучить Солдата Т7",80],["Облучить Солдата Т8",90]],
-            "Рейд":[["За каждого уничтоженного бойца T7",18],["За каждого уничтоженного солдата T8",20],["За каждого уничтоженного солдата T9",23],["За каждого уничтоженного солдата T10",25],["За каждого потерянного солдата T1",4],["За каждого потерянного солдата T2",6],["За каждого потерянного солдата T3",8],["За каждого погибшего солдата T4",10],["За каждого погибшего солдата T5",12],["За каждого погибшего солдата T6",14],["За каждого погибшего солдата T7",16],["За каждого погибшего солдата T8",18],["За каждого погибшего солдата T9",20],["За каждого потерянного бойца T10",22],["Отправить 1 Легендарный Транспортник",200000]]
-        };
-        phases.forEach(phase => {
-            const card = document.createElement("div"); card.className = "score-calc";
-            const header = document.createElement("div"); header.className = "score-header"; header.innerHTML = `<span>🏆 ${phase}</span><span class="toggle-icon">▼</span>`;
-            const content = document.createElement("div"); content.className = "score-content";
-            const table = document.createElement("table"); table.className = "score-table";
-            let tbody = "<thead><th>Действие</th><th>Базовые очки</th><th>Количество / суммарно</th><th>Итого</th></thead><tbody>";
-            baseScore[phase].forEach((item, idx) => {
-                let inputHtml = `<input type="number" id="${phase}_${idx}" value="0" min="0" step="1" class="score-input" data-phase="${phase}" data-base="${item[1]}" data-action="${actionMap[item[0]] || ""}">`;
-                if (actionMap[item[0]] === "experience") inputHtml = `<input type="number" id="${phase}_${idx}" value="0" min="0" step="1000" class="score-input" data-phase="${phase}" data-base="${item[1]}" data-action="experience" placeholder="тыс. опыта">`;
-                else if (actionMap[item[0]] === "food" || actionMap[item[0]] === "metal") inputHtml = `<input type="number" id="${phase}_${idx}" value="0" min="0" step="100" class="score-input" data-phase="${phase}" data-base="${item[1]}" data-action="${actionMap[item[0]]}" placeholder="всего ед.">`;
-                else if (actionMap[item[0]] === "oil") inputHtml = `<input type="number" id="${phase}_${idx}" value="0" min="0" step="60" class="score-input" data-phase="${phase}" data-base="${item[1]}" data-action="oil" placeholder="всего ед.">`;
-                tbody += `<tr><td>${item[0]}</td><td>${item[1]}</td><td>${inputHtml}</td><td class="score-row-total" id="total_${phase}_${idx}">0</td></tr>`;
-            });
-            tbody += "</tbody>";
-            table.innerHTML = tbody;
-            const totalDiv = document.createElement("div"); totalDiv.className = "score-total"; totalDiv.id = `total_${phase}`; totalDiv.innerText = "Итого: 0";
-            const progDiv = document.createElement("div"); progDiv.className = "score-progress"; progDiv.id = `progress_${phase}`; progDiv.innerHTML = `<div class="progress-bar"><div class="progress-fill"></div><div class="progress-marks"></div></div><div class="progress-labels"></div>`;
-            const addDiv = document.createElement("div"); addDiv.className = "add-points"; addDiv.innerHTML = `<input type="number" id="add_${phase}" placeholder="+ очки" value="0" step="1000"><button class="add-points-btn" data-phase="${phase}">➕ Добавить очки</button>`;
-            content.appendChild(table); content.appendChild(totalDiv); content.appendChild(progDiv); content.appendChild(addDiv);
-            card.appendChild(header); card.appendChild(content); container.appendChild(card);
-            header.onclick = () => { card.classList.toggle("open"); const ic = header.querySelector(".toggle-icon"); ic.innerText = card.classList.contains("open") ? "▲" : "▼"; };
-            card.classList.add("open");
-        });
-        document.querySelectorAll(".vs-bonus").forEach(inp => inp.addEventListener("input", () => phases.forEach(p => updateScoreForPhase(p, categoryMap))));
-        document.querySelectorAll(".score-input").forEach(inp => inp.addEventListener("input", () => updateScoreForPhase(inp.dataset.phase, categoryMap)));
-        document.querySelectorAll(".add-points-btn").forEach(btn => btn.addEventListener("click", (e) => {
-            let phase = btn.dataset.phase;
-            let addVal = parseInt(document.getElementById(`add_${phase}`).value) || 0;
-            if (addVal !== 0) {
-                let cur = 0;
-                let totalDiv = document.getElementById(`total_${phase}`);
-                let match = totalDiv.innerText.match(/\d+/);
-                if (match) cur = parseInt(match[0]) || 0;
-                updateScoreForPhase(phase, categoryMap, cur + addVal);
-                document.getElementById(`add_${phase}`).value = 0;
-            }
-        }));
-        phases.forEach(p => updateScoreForPhase(p, categoryMap));
-    }
-
-    function buildUpgrades() {
-        const container = document.getElementById("upgradesContainer");
-        container.innerHTML = `<div class="upgrade-selector"><label for="upgradeLevelSelect">Выберите уровень базы (1–30):</label><select id="upgradeLevelSelect">${Array.from({length:30}, (_,i) => `<option value="${i+1}">Уровень ${i+1}</option>`).join('')}</select><div id="upgradeDetail" class="upgrade-detail">Выберите уровень, чтобы увидеть условия</div></div>`;
-        const sel = document.getElementById("upgradeLevelSelect");
-        const det = document.getElementById("upgradeDetail");
-        sel.addEventListener("change", () => { let row = upgradesData[parseInt(sel.value)-1]; det.innerHTML = row ? `<strong>Условие 1:</strong> ${row[1]}<br><strong>Условие 2:</strong> ${row[2]}` : "Нет данных"; });
-        sel.dispatchEvent(new Event("change"));
-    }
-
-    function loadCalendar() {
-        const tbody = document.querySelector("#calendarTable tbody");
-        tbody.innerHTML = "";
-        calendarData.forEach(r => { const tr = document.createElement("tr"); tr.innerHTML = `  <td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td>`; tbody.appendChild(tr); });
-    }
-
-    function buildGuides() {
-        const guides = [
-            {title: "📡 Фаза 1: Радар — полное руководство", content: `<h4>Описание</h4><p>Очки за задания радара, выносливость, опыт героя, сбор ресурсов, боевые чипы/части бойца.</p><h4>Подготовка за день</h4><ul><li>Накопите 30–35 заданий (не трогайте 18 часов).</li><li>Держите полную выносливость + банки.</li><li>Отправьте отряды на сбор до старта фазы (05:00 МСК).</li></ul><h4>Старт</h4><ul><li>Выполните накопленные задания, используйте выносливость, части бойцов.</li><li>Постоянно отправляйте отряды на сбор.</li><li>Совмещайте с «Готовностью к миссии».</li></ul>`},
-            {title: "🏗️ Фаза 2: Строительство — призрачная стройка", content: `<h4>Подготовка</h4><ul><li>Начните улучшать здания за несколько дней до фазы, чтобы они завершились после её старта («призрачная стройка»).</li><li>Не тратьте ускорения постройки всю неделю.</li></ul><h4>Старт</h4><ul><li>Завершите стройки → очки за мощь.</li><li>Запросите Министра строительства.</li><li>Используйте ускорения, выполните оранжевую миссию, отправьте легендарный транспортник.</li></ul>`},
-            {title: "🔬 Фаза 3: Технологии — экономия и вливание", content: `<h4>Главная стратегия</h4><p>Копите ускорения исследований и научные данные всю неделю, вливайте строго в среду.</p><h4>План</h4><ul><li>Закройте радар, используйте ускорения, завершите долгие исследования.</li><li>Тратьте научные данные, открывайте сундуки с компонентами.</li><li>Запросите Министра науки.</li></ul>`},
-            {title: "🦸 Фаза 4: Герой — полное руководство", content: `<h4>Подготовка</h4><ul><li>Копите опыт героя, карты найма, фрагменты, книги навыков.</li></ul><h4>Старт</h4><ul><li>Сначала карты найма → опыт героя → фрагменты (мифические → эпические → редкие) → книги навыков.</li><li>Совмещайте с «Готовностью к миссии».</li></ul>`},
-            {title: "⚔️ Фаза 5: Боеготовность — совмещение ускорений", content: `<h4>Действия</h4><ul><li>Используйте ускорения постройки, исследований, тренировок.</li><li>Обучайте солдат в указанные интервалы (очки сразу).</li><li>Используйте переобучение (Т6→Т8) для экономии ускорений.</li></ul>`},
-            {title: "🏆 Фаза 6: Рейд — безопасная война", content: `<h4>Подготовка</h4><ul><li>Купите щит, отключите оборону в гарнизоне.</li><li>Ресурсы держите в инвентаре, освободите госпиталь.</li></ul><h4>Во время рейда</h4><ul><li>Разведывайте цели, атакуйте, не обнуляйте базы без сопротивления.</li><li>Следите за HP базы, не телепортируйтесь в лагерь во время боя.</li></ul>`},
-            {title: "🎯 Готовность к миссии: 18 сундуков без затрат", content: `<h4>Три события</h4><h4>1. Обучение солдат</h4><ul><li>Должность Министра обороны, перед событием лагеря пусты.</li><li>Тренируйте Т6, затем улучшайте до Т8 (дешевле).</li></ul><h4>2. Улучшение бойца</h4><ul><li>Тратьте энергию (~300 ед.), используйте бесплатное восстановление 2 раза.</li></ul><h4>3. Улучшение героя</h4><ul><li>Тратьте накопленный опыт и книги.</li></ul><p>Стройку и науку не трогайте — оставьте ускорения для Битвы Альянсов.</p>`},
-            {title: "📊 Аналитика событий (на основе данных сервера)", content: `<h4>Основные выводы</h4><ul><li>Главная сила сервера — активность в Состязании альянсов (VS) и массовость топ-игроков.</li><li>Слабые места: суммарный урон по Гигантскому боссу и активность в «Готовности к миссии».</li><li>Тактика: организовывать массовые атаки босса («зерг-раш»), контролировать грабежи транспортников (бить только целые фуры).</li><li>Для победы в войне серверов важна не столько сила отдельных китов, сколько скоординированность всех игроков.</li></ul><p>Используйте аналитику для планирования: уделяйте внимание боссу, не пропускайте сундуки готовности, контролируйте грабежи.</p>`}
-        ];
-        const cont = document.getElementById("guidesContainer");
-        cont.innerHTML = "";
-        guides.forEach(g => {
-            const card = document.createElement("div"); card.className = "guide-card";
-            const head = document.createElement("div"); head.className = "guide-header";
-            head.innerHTML = `<span>${g.title}</span><span class="toggle-icon">▼</span>`;
-            const body = document.createElement("div"); body.className = "guide-content"; body.innerHTML = g.content;
-            head.onclick = () => { card.classList.toggle("open"); const ic = head.querySelector(".toggle-icon"); ic.innerText = card.classList.contains("open") ? "▲" : "▼"; };
-            card.appendChild(head); card.appendChild(body); cont.appendChild(card);
-        });
-    }
-
-    function getCurrentPhaseAndNext() {
-        const now = new Date();
-        const weekday = getWeekdayName();
-        const phaseNames = { "Понедельник":"Фаза 1. Радар", "Вторник":"Фаза 2. Строительство", "Среда":"Фаза 3. Технологии", "Четверг":"Фаза 4. Герой", "Пятница":"Фаза 5. Боеготовность", "Суббота":"Фаза 6. Рейд" };
-        let current = null, next = null;
-        if (phaseNames[weekday]) {
-            let end = new Date(now); end.setHours(9,0,0,0);
-            if (now < end) end.setDate(now.getDate()-1); else end.setDate(now.getDate()+1);
-            current = { name: phaseNames[weekday], end: end };
-        }
-        const days = ["Понедельник","Вторник","Среда","Четверг","Пятница","Суббота","Воскресенье"];
-        let idx = days.indexOf(weekday);
-        for (let i=1; i<=7; i++) {
-            let nd = days[(idx+i)%7];
-            if (phaseNames[nd]) {
-                let st = new Date(now); st.setDate(now.getDate()+i); st.setHours(9,0,0,0);
-                next = { name: phaseNames[nd], start: st }; break;
-            }
-        }
-        return { currentPhase: current, nextPhase: next };
-    }
-
-    function getNextCalendarEvent() {
-        const now = new Date(), gd = getGameDay();
-        let best = Infinity, bestEv = null;
-        for (let [d,t,e] of calendarData) {
-            let dn = parseInt(d.split(" ")[1]), [h,m,s] = t.split(":").map(Number);
-            let dt = new Date(now); dt.setHours(h,m,s,0);
-            let ahead = (dn - gd + 7) % 7;
-            dt.setDate(now.getDate() + ahead);
-            if (ahead===0 && dt<=now) dt.setDate(now.getDate()+7);
-            let diff = dt-now;
-            if (diff>0 && diff<best) { best=diff; bestEv={name:e,delta:diff}; }
-        }
-        if (bestEv) { let ts = Math.floor(bestEv.delta/1000); return { name: bestEv.name, hours: Math.floor(ts/3600), minutes: Math.floor((ts%3600)/60), seconds: ts%60 }; }
-        return null;
-    }
-
-    function updateTimeDisplay() {
-        const now = new Date();
-        document.getElementById("localTime").innerText = now.toLocaleString("ru-RU");
-        document.getElementById("gameDay").innerText = `День ${getGameDay()}`;
-        document.getElementById("weekdayName").innerText = getWeekdayName();
-        let { currentPhase, nextPhase } = getCurrentPhaseAndNext();
-        let html = "";
-        if (currentPhase) html += `🔹 Текущая фаза: ${currentPhase.name}<br>`;
-        if (nextPhase) { let rem = Math.max(0,(nextPhase.start-now)/1000); html += `⏰ До следующей фазы "${nextPhase.name}" осталось: ${Math.floor(rem/3600)} ч ${Math.floor((rem%3600)/60)} мин ${Math.floor(rem%60)} сек.`; }
-        else html += "⏰ До следующей фазы: нет данных";
-        document.getElementById("phaseInfo").innerHTML = html;
-        let nxt = getNextCalendarEvent();
-        if (nxt) document.getElementById("nextEvent").innerHTML = `➡ До события "${nxt.name}" осталось: ${nxt.hours} ч ${nxt.minutes} мин ${nxt.seconds} сек`;
-        else document.getElementById("nextEvent").innerHTML = "➡ Нет ближайших событий";
-    }
-
-    function updateReminder() {
-        const day = getWeekdayName();
-        const tips = {
-            "Воскресенье": ["📡 Не выполняйте задания радара — копите до понедельника.", "🚚 Отправьте отряды в ночь на сбор ресурсов.", "⚡ Подготовьте выносливость и банки."],
-            "Понедельник": ["🎯 Сразу выполните накопленные задания радара.", "💪 Используйте части бойцов, боевые чипы, выносливость.", "🔄 Постоянно отправляйте отряды на сбор ресурсов.", "🤝 Совмещайте с Готовностью к миссии."],
-            "Вторник": ["🏗️ Завершите «призрачную стройку».", "📈 Используйте ускорения постройки.", "✉️ Выполните оранжевую миссию и отправьте легендарный транспортник."],
-            "Среда": ["🔬 Не тратьте ускорения исследований всю неделю — используйте сегодня.", "📡 Закройте радар.", "📦 Откройте сундуки с компонентами.", "🧪 Запросите Министра науки."],
-            "Четверг": ["🦸 Используйте опыт героя, карты найма.", "🎴 Тратьте фрагменты героев (мифические→эпические→редкие).", "📖 Примените книги навыков.", "📡 Копите радар на завтра."],
-            "Пятница": ["⚔️ Совмещайте ускорения постройки, исследований и тренировок.", "🎓 Обучайте солдат в интервалы.", "🛡️ Подготовьте щит на субботу."],
-            "Суббота": ["🏆 Используйте оставшиеся ускорения.", "⚔️ Участвуйте в рейдах, убивайте солдат.", "🛡️ Не бойтесь потерь — они дают очки.", "🚫 Отключите оборону в гарнизоне, держите ресурсы в инвентаре."]
-        };
-        let list = tips[day] || ["📅 Следуйте расписанию фаз."];
-        document.getElementById("reminder").innerHTML = `<strong>📌 Напоминание на ${day}</strong><ul>${list.map(t=>`<li>${t}</li>`).join('')}</ul>`;
-    }
-
-    let items = [], selectedIdx = -1;
-    function getStartSec() { return (parseInt(document.getElementById("startDays").value)||0)*86400+(parseInt(document.getElementById("startHours").value)||0)*3600+(parseInt(document.getElementById("startMinutes").value)||0)*60+(parseInt(document.getElementById("startSeconds").value)||0); }
-    function updateResult() {
-        let total = items.reduce((s,i)=>s+i.quantity*i.durationMinutes*60,0);
-        let start = getStartSec(), mode = document.querySelector('input[name="mode"]:checked').value;
-        let end = mode==="add"?start+total:start-total; if(end<0) end=0;
-        document.getElementById("resultTime").innerText = formatTime(end);
-    }
-    function renderItems() {
-        const ul = document.getElementById("itemsList"); ul.innerHTML="";
-        items.forEach((it,i)=>{ let txt={1:"1 минута",5:"5 минут",60:"1 час",240:"4 часа",480:"8 часов"}[it.durationMinutes]; const li=document.createElement("li"); li.innerText=`${it.quantity} шт × ${txt}`; li.onclick=()=>{ document.querySelectorAll("#itemsList li").forEach(l=>l.classList.remove("selected")); li.classList.add("selected"); selectedIdx=i; }; ul.appendChild(li); });
-    }
-    function addItem() { let q=parseInt(document.getElementById("itemQty").value), d=parseInt(document.getElementById("durationSelect").value); if(q>0){ items.push({quantity:q,durationMinutes:d}); renderItems(); updateResult(); } else alert("Количество >0"); }
-    function editItem() { if(selectedIdx!==-1){ let it=items[selectedIdx]; document.getElementById("itemQty").value=it.quantity; document.getElementById("durationSelect").value=it.durationMinutes; items.splice(selectedIdx,1); selectedIdx=-1; renderItems(); updateResult(); } else alert("Выберите предмет"); }
-    function delItem() { if(selectedIdx!==-1){ items.splice(selectedIdx,1); selectedIdx=-1; renderItems(); updateResult(); } else alert("Выберите предмет"); }
-    function resetAll() { items=[]; selectedIdx=-1; renderItems(); document.getElementById("startDays").value=0; document.getElementById("startHours").value=0; document.getElementById("startMinutes").value=0; document.getElementById("startSeconds").value=0; updateResult(); }
-
-    function convertComponent() {
-        let from = document.getElementById("convFrom").value;
-        let to = document.getElementById("convTo").value;
-        let amount = parseFloat(document.getElementById("convertAmount").value) || 0;
-        let result = 0;
-        const rates = { steel:1, steelComp:4, heatGold:16, composite:64, crystal:256 };
-        let fromVal = rates[from];
-        let toVal = rates[to];
-        if (fromVal && toVal) result = amount * fromVal / toVal;
-        document.getElementById("convertResult").innerHTML = `${Math.floor(result)} ${to==="steel"?"стали":to==="steelComp"?"стальных компонентов":to==="heatGold"?"жаропрочного золота":to==="composite"?"композитного материала":"проводящих кристаллов"}`;
-    }
-
-    function calcGearUpgrade() {
-        let cur = parseInt(document.getElementById("gearCur").value) || 0;
-        let tar = parseInt(document.getElementById("gearTar").value) || 0;
-        if (cur>=tar) { alert("Целевой уровень должен быть выше текущего"); return; }
-        let totalStone = 0, totalOil = 0;
-        for (let i=cur; i<tar; i++) {
-            let cost = gearUpgradeCost.find(c => c.from === i);
-            if (cost) { totalStone += cost.stone; totalOil += cost.oil; }
-            else { alert(`Нет данных для уровня ${i}→${i+1}`); return; }
-        }
-        document.getElementById("gearResult").innerHTML = `Очищенных камней: ${totalStone}<br>Нефти: ${totalOil.toLocaleString()}`;
-    }
-
-    function calcStarCost() {
-        let star = document.querySelector('input[name="starType"]:checked').value;
-        let stone, crystals, oil;
-        if (star === "star1") {
-            stone = 12000 * 5;
-            crystals = 145 * 5;
-            oil = 20000000 * 5;
-        } else {
-            stone = 16000 * 5;
-            crystals = 200 * 5;
-            oil = 30000000 * 5;
-        }
-        document.getElementById("starResult").innerHTML = `Очищенных камней: ${stone}<br>Проводящих кристаллов: ${crystals}<br>Нефти: ${oil.toLocaleString()}`;
-    }
-
-    document.addEventListener("DOMContentLoaded", () => {
-        buildPhases(); buildScoreCalculator(); buildUpgrades(); buildGuides(); loadCalendar(); updateReminder();
-        setInterval(() => { updateTimeDisplay(); updatePhaseTimers(); updateReminder(); }, 1000);
-        document.getElementById("collapseTimeBtn").addEventListener("click", () => document.getElementById("timePanel").classList.toggle("collapsed"));
-        const calcBody = document.getElementById("calcBody"), calcIcon = document.getElementById("calcToggleIcon"); let calcCollapsed = false;
-        document.getElementById("toggleCalculator").addEventListener("click", () => {
-            if(calcCollapsed){ calcBody.style.maxHeight=calcBody.scrollHeight+"px"; calcIcon.innerText="▼"; setTimeout(()=>calcBody.style.maxHeight="none",300); }
-            else{ calcBody.style.maxHeight=calcBody.scrollHeight+"px"; setTimeout(()=>calcBody.style.maxHeight="0",10); calcIcon.innerText="▲"; }
-            calcCollapsed=!calcCollapsed;
-        }); calcBody.style.maxHeight="none";
-        document.getElementById("addItemBtn").onclick=addItem; document.getElementById("editItemBtn").onclick=editItem; document.getElementById("delItemBtn").onclick=delItem; document.getElementById("resetAllBtn").onclick=resetAll;
-        document.getElementById("resetStartBtn").onclick=()=>{ document.getElementById("startDays").value=0; document.getElementById("startHours").value=0; document.getElementById("startMinutes").value=0; document.getElementById("startSeconds").value=0; updateResult(); };
-        document.querySelectorAll("#startDays, #startHours, #startMinutes, #startSeconds").forEach(e=>e.addEventListener("input",updateResult));
-        document.querySelectorAll('input[name="mode"]').forEach(r=>r.addEventListener("change",updateResult));
-        updateResult();
-        document.getElementById("convertBtn").onclick = convertComponent;
-        document.getElementById("calcGearUpgrade").onclick = calcGearUpgrade;
-        document.getElementById("calcStarCost").onclick = calcStarCost;
-        const themeToggle = document.getElementById("themeToggle"); let dark=false;
-        themeToggle.onclick = () => { dark=!dark; document.body.classList.toggle("dark",dark); themeToggle.innerText=dark?"☀️ Светлая":"🌙 Тёмная"; };
-        const tabBtns = document.querySelectorAll(".tab-button"), tabs = document.querySelectorAll(".tab-content");
-        tabBtns.forEach(btn => { btn.addEventListener("click", () => { let tab=btn.dataset.tab; tabBtns.forEach(b=>b.classList.remove("active")); btn.classList.add("active"); tabs.forEach(t=>t.classList.remove("active")); document.getElementById(`tab-${tab}`).classList.add("active"); }); });
-    });
-</script>
+<script src="script.js"></script>
 </body>
 </html>
