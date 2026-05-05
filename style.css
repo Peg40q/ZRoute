@@ -17,6 +17,7 @@
     --progress-fill: #3a7bd5;
     --support-bg: #ffe6f0;
     --support-border: #ff69b4;
+    --guide-accent: #ffb74d;
 }
 body.dark {
     --bg: #1a1d23;
@@ -31,6 +32,7 @@ body.dark {
     --progress-fill: #4c9aff;
     --support-bg: #3a1e2a;
     --support-border: #ff69b4;
+    --guide-accent: #ff8c00;
 }
 body {
     font-family: 'Segoe UI', system-ui, sans-serif;
@@ -431,4 +433,60 @@ body {
 .guide-card.open .guide-content {
     max-height: 2000px;
     padding: 12px;
+}
+
+.guide-card {
+    background: var(--card);
+    border-radius: 20px;
+    margin-bottom: 14px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+}
+.guide-header {
+    background: linear-gradient(135deg, var(--guide-accent), #ff8a65);
+    color: white;
+    padding: 14px 18px;
+    cursor: pointer;
+    font-weight: 700;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: none;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+.guide-content {
+    padding: 0 16px;
+    background: var(--bg);
+    color: var(--text);
+}
+.guide-content h4 {
+    margin: 1em 0 0.5em;
+    color: var(--accent);
+    font-size: 0.95rem;
+    border-left: 4px solid var(--accent);
+    padding-left: 10px;
+}
+.guide-content ul {
+    list-style: none;
+    padding: 0;
+}
+.guide-content ul li {
+    position: relative;
+    padding: 6px 0 6px 24px;
+    margin-bottom: 4px;
+    border-bottom: 1px solid var(--card-border);
+}
+.guide-content ul li:last-child {
+    border-bottom: none;
+}
+.guide-content ul li::before {
+    content: "▸";
+    position: absolute;
+    left: 6px;
+    color: var(--guide-accent);
+    font-weight: bold;
+}
+.guide-content p {
+    margin: 0.6em 0;
+    line-height: 1.5;
 }
