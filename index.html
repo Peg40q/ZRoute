@@ -10,9 +10,18 @@
 <div class="container">
     <h1 class="main-title">
         <span class="title-line">Z Route: Redemption</span>
-        <span class="title-line"><span class="paw">🐾</span> ЕГО ПУШИСТЕЙШЕСТВО <span class="paw">🐾</span></span>
+        <span class="title-line" id="mainTitleSub"><span class="paw">🐾</span> ЕГО ПУШИСТЕЙШЕСТВО <span class="paw">🐾</span></span>
     </h1>
-    <button class="theme-toggle" id="themeToggle">🌙 Тёмная</button>
+    <div class="header-controls">
+        <div class="tz-control">
+            <span id="tzLabel">Часовой пояс</span>
+            <select id="tzSelect"></select>
+        </div>
+        <button class="lang-toggle" id="langToggle">🇷🇺 RU</button>
+        <button class="theme-toggle" id="themeToggle">🌙 Тёмная</button>
+    </div>
+
+    <div id="currentEventBanner" class="current-event-banner"></div>
 
     <div class="time-panel" id="timePanel">
         <div class="time-panel-header" id="toggleTimePanel">
@@ -21,8 +30,9 @@
         </div>
         <div class="time-content" id="timeContent">
             <div class="time-stats">
-                <div>🕒 <span id="localTime"></span></div>
-                <div>📅 День <span id="gameDay"></span> (<span id="weekdayName"></span>)</div>
+                <div><span id="localTimeLabel">🕒 Локальное время</span>: <span id="localTime"></span></div>
+                <div><span id="serverTimeLabel">🖥️ Время сервера</span>: <span id="serverTime"></span></div>
+                <div><span id="gameDayLabel">📅 День игры</span> <span id="gameDay"></span> (<span id="weekdayName"></span>)</div>
             </div>
             <div class="phase-info" id="phaseInfo">⏳ До следующей фазы: загрузка...</div>
         </div>
@@ -40,13 +50,14 @@
         <button class="tab-button" data-tab="resources">💰 Ресурсы</button>
         <button class="tab-button" data-tab="itemupgrade">⚡ Золотые вещи</button>
         <button class="tab-button" data-tab="guides">📖 Инструкции</button>
+        <button class="tab-button" data-tab="codes">🎁 Коды</button>
         <button class="tab-button support" data-tab="support">🙏 Спасибо</button>
     </div>
 
     <div class="tab-content active" id="tab-phases"><div id="phasesContainer"></div></div>
     <div class="tab-content" id="tab-score">
         <div class="vs-panel">
-            <h3>⚙️ Технологии VS (бонусы в %)</h3>
+            <h3 id="vsTitle">⚙️ Технологии VS (бонусы в %)</h3>
             <div class="vs-grid">
                 <div class="vs-item"><label>📡 Радар</label><input type="number" id="vs_radar" value="0" step="5" class="vs-bonus"></div>
                 <div class="vs-item"><label>🏗️ Строительство</label><input type="number" id="vs_build" value="0" step="5" class="vs-bonus"></div>
@@ -57,7 +68,7 @@
                 <div class="vs-item"><label>💀 Убийство/потеря</label><input type="number" id="vs_kill" value="0" step="5" class="vs-bonus"></div>
                 <div class="vs-item"><label>✨ Общий (все действия)</label><input type="number" id="vs_all" value="0" step="5" class="vs-bonus"></div>
             </div>
-            <div class="small-note">Бонусы суммируются. Очки пересчитываются автоматически.</div>
+            <div class="small-note" id="vsBonusNote">Бонусы суммируются. Очки пересчитываются автоматически.</div>
         </div>
         <div id="scoreContainer"></div>
     </div>
@@ -96,7 +107,7 @@
                     <button id="delItemBtn">🗑️</button>
                 </div>
                 <div class="items-list">
-                    <div class="items-list-header">📦 Предметы (клик для выбора):</div>
+                    <div class="items-list-header" id="itemsListHeader">📦 Предметы (клик для выбора):</div>
                     <ul id="itemsList"></ul>
                 </div>
                 <div class="result" id="resultTime">0 дн 0 ч 0 мин 0 сек</div>
@@ -108,7 +119,7 @@
     <div class="tab-content" id="tab-resources">
         <div class="resource-calc">
             <h3>🔁 Конвертация компонентов</h3>
-            <p>Цепочка: 4 Стали ▸ 1 Стальной компонент ▸ 4 ▸ Жаропрочное золото ▸ 4 ▸ Композитный материал ▸ 4 ▸ Проводящий кристалл (1 кристалл = 256 стали).</p>
+            <p id="convChainDesc">Цепочка: 4 Стали ▸ 1 Стальной компонент ▸ 4 ▸ Жаропрочное золото ▸ 4 ▸ Композитный материал ▸ 4 ▸ Проводящий кристалл (1 кристалл = 256 стали).</p>
             <div style="display: flex; gap: 8px; flex-wrap: wrap; align-items: center;">
                 <select id="convFrom" style="width: 40%;">
                     <option value="steel">Сталь</option>
@@ -145,15 +156,15 @@
             <h3>⭐ Прокачка звёзд (1⭐ и 2⭐)</h3>
             <p>Для получения звезды нужно выполнить 5 улучшений по фиксированной цене.</p>
             <div class="radio-group">
-                <label class="radio-custom">
+                <label class="radio-custom" id="star1Label">
                     <input type="radio" name="starType" value="star1" checked>
                     <span class="radio-checkmark"></span>
-                    1 звезда (5×12 000 камней, 5×145 кристаллов, 5×20 м нефти)
+                    1 звезда (5×12 000 камней, 5×145 кристаллов, 5×20 м нефти)
                 </label>
-                <label class="radio-custom">
+                <label class="radio-custom" id="star2Label">
                     <input type="radio" name="starType" value="star2">
                     <span class="radio-checkmark"></span>
-                    2 звезда (5×16 000 камней, 5×200 кристаллов, 5×30 м нефти)
+                    2 звезда (5×16 000 камней, 5×200 кристаллов, 5×30 м нефти)
                 </label>
             </div>
             <button id="calcStarCost">Рассчитать стоимость звезды</button>
@@ -165,14 +176,18 @@
         <div id="guidesContainer" class="guides-container"></div>
     </div>
 
+    <div class="tab-content" id="tab-codes">
+        <div id="codesContainer"></div>
+    </div>
+
     <div class="tab-content" id="tab-support">
-        <div class="support-card">
+        <div class="support-card" id="supportCard">
             <h3>🙏 Спасибо, что пользуетесь помощником!</h3>
             <p>Если этот инструмент помогает вам в игре и вы хотите поддержать его развитие, вы можете сделать добровольное пожертвование. Все средства пойдут на поддержку серверов и создание новых гайдов.</p>
             <p><strong>Важно:</strong> Пожертвование является добровольным и не даёт никаких преимуществ в игре или в использовании помощника. Вы можете пользоваться всеми функциями совершенно бесплатно.</p>
             <p>Реквизиты для поддержки (РФ):</p>
             <ul style="text-align: left; display: inline-block;">
-                <li>МТС: 2203 8302 4197 6290 </li>
+                <li>МТС: 2203 8302 4197 6290</li>
                 <li><a href="https://boosty.to/peg40/donate" target="_blank">Поддержать проект на Boosty</a></li>
             </ul>
             <p style="margin-top: 12px;">Или напишите в игре (потом добавим ТГ и мыло) <strong>РЕЗЕРВ</strong> для других способов.</p>
@@ -183,6 +198,8 @@
         <a href="https://boosty.to/peg40/donate" target="_blank" class="paw-link">🐾 ЕГО ПУШИСТЕЙШЕСТВО 🐾</a>
     </div>
 </div>
+<script src="lang.js"></script>
+<script src="data.js"></script>
 <script src="script.js"></script>
 </body>
 </html>
