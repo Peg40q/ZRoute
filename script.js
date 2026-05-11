@@ -1,3 +1,4 @@
+// script.js
 document.addEventListener('contextmenu', e => e.preventDefault());
 document.addEventListener('keydown', e => { if (e.ctrlKey && (e.key === 'u' || e.key === 's' || e.key === 'c' || e.key === 'i' || e.key === 'j')) e.preventDefault(); });
 
@@ -111,7 +112,7 @@ function getTimeToEvent(eventName) {
         const dayNum = parseInt(dayStr.split(" ")[1]);
         const [h_game] = timeStr.split(':').map(Number);
         let calDayNum = dayNum;
-        if (h_game < 5) calDayNum = (calDayNum % 7) + 1;
+        if (h_game <= 5) calDayNum = (calDayNum % 7) + 1;
         const tr = translateTime(timeStr);
         const userDayNum = (calDayNum + tr.dayShift - 1 + 7) % 7 + 1;
         const [h,m,s] = tr.time.split(":").map(Number);
@@ -180,21 +181,61 @@ function getCurrentActiveEvent() {
     return null;
 }
 
+function getCurrentPhaseAndNext() {
+    const now = getNow();
+    const gameNow = getGameNow();
+    const daysEn = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+    const currentDayGameEn = daysEn[gameNow.getDay()];
+    const phaseKeys = {
+        "Monday": { key: "phase_radar", idx: 0 },
+        "Tuesday": { key: "phase_build", idx: 1 },
+        "Wednesday": { key: "phase_tech", idx: 2 },
+        "Thursday": { key: "phase_hero", idx: 3 },
+        "Friday": { key: "phase_prepare", idx: 4 },
+        "Saturday": { key: "phase_raid", idx: 5 }
+    };
+    const phaseNames = i18n[currentLang].phase_names;
+    let current = null, next = null;
+    const tr = translateTime("05:00:00");
+
+    if (phaseKeys[currentDayGameEn]) {
+        const pk = phaseKeys[currentDayGameEn];
+        current = { name: t(pk.key), shortName: phaseNames[pk.idx] };
+    }
+
+    const idx = gameNow.getDay();
+    for (let i = 1; i <= 7; i++) {
+        let ndEn = daysEn[(idx + i) % 7];
+        if (phaseKeys[ndEn]) {
+            const pk = phaseKeys[ndEn];
+            let st = new Date(now.getTime());
+            st.setDate(now.getDate() + i + tr.dayShift);
+            const [h,m,s] = tr.time.split(":").map(Number);
+            st.setHours(h, m, s, 0);
+            next = { name: t(pk.key), shortName: phaseNames[pk.idx], start: st };
+            break;
+        }
+    }
+    return { currentPhase: current, nextPhase: next };
+}
+
 function updateCurrentEventBanner() {
     const banner = document.getElementById("currentEventBanner");
     if (!banner) return;
     const activeEvent = getCurrentActiveEvent();
     const { currentPhase } = getCurrentPhaseAndNext();
-    if (activeEvent && currentPhase) {
+
+    banner.classList.remove("active");
+    banner.innerHTML = "";
+
+    if (currentPhase && activeEvent) {
         const eventLabel = i18n[currentLang].event_labels[activeEvent] || activeEvent;
-        banner.innerText = t('current_active_phase_event', { phase: currentPhase.name, event: eventLabel });
+        banner.innerHTML = t('banner_phase_event', { phase: currentPhase.shortName, event: eventLabel });
         banner.classList.add("active");
     } else if (activeEvent) {
         const eventLabel = i18n[currentLang].event_labels[activeEvent] || activeEvent;
-        banner.innerText = t('current_active_event', { event: eventLabel });
+        banner.innerHTML = t('banner_event', { event: eventLabel });
         banner.classList.add("active");
-    } else {
-        banner.classList.remove("active");
     }
 }
 
@@ -463,32 +504,6 @@ function buildVideos() {
     });
 }
 
-function getCurrentPhaseAndNext() {
-    const now = getNow();
-    const gameNow = getGameNow();
-    const daysEn = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-    const currentDayGameEn = daysEn[gameNow.getDay()];
-    const phaseKeys = { "Monday": "phase_radar", "Tuesday": "phase_build", "Wednesday": "phase_tech", "Thursday": "phase_hero", "Friday": "phase_prepare", "Saturday": "phase_raid" };
-    let current = null, next = null;
-    const tr = translateTime("05:00:00");
-    if (phaseKeys[currentDayGameEn]) {
-        current = { name: t(phaseKeys[currentDayGameEn]) };
-    }
-    const idx = gameNow.getDay();
-    for (let i = 1; i <= 7; i++) {
-        let ndEn = daysEn[(idx + i) % 7];
-        if (phaseKeys[ndEn]) {
-            let st = new Date(now.getTime());
-            st.setDate(now.getDate() + i + tr.dayShift);
-            const [h,m,s] = tr.time.split(":").map(Number);
-            st.setHours(h, m, s, 0);
-            next = { name: t(phaseKeys[ndEn]), start: st };
-            break;
-        }
-    }
-    return { currentPhase: current, nextPhase: next };
-}
-
 function getNextCalendarEvent() {
     const now = getNow();
     const userDayNow = {0:1,1:2,2:3,3:4,4:5,5:6,6:7}[now.getDay()];
@@ -498,7 +513,7 @@ function getNextCalendarEvent() {
         const dayNum = parseInt(dayStr.split(" ")[1]);
         const [h_game] = timeStr.split(':').map(Number);
         let calDayNum = dayNum;
-        if (h_game < 5) calDayNum = (calDayNum % 7) + 1;
+        if (h_game <= 5) calDayNum = (calDayNum % 7) + 1;
         const tr = translateTime(timeStr);
         const userDayNum = (calDayNum + tr.dayShift - 1 + 7) % 7 + 1;
         const [h,m,s] = tr.time.split(":").map(Number);
