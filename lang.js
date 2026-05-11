@@ -7,6 +7,7 @@ const i18n = {
         next_event: "➡ {event} через {h} ч {m} мин",
         no_next_event: "➡ Нет ближайших событий",
         current_active_event: "🔥 СЕЙЧАС ИДЁТ: {event}",
+        current_active_phase_event: "🔥 Фаза {phase}: {event}",
         day_label: "День",
         local_time: "🕒 Локальное время",
         server_time: "🖥️ Время сервера (UTC-2)",
@@ -36,6 +37,7 @@ const i18n = {
             itemupgrade: "⚡ Золотые вещи",
             guides: "📖 Инструкции",
             codes: "🎁 Коды",
+            video: "🎥 Видео",
             support: "🙏 Спасибо"
         },
         ui: {
@@ -74,10 +76,6 @@ const i18n = {
             current_phase: "🔹 Текущая фаза",
             next_phase_rem: "⏰ До следующей фазы",
             no_next_phase: "⏰ До следующей фазы: нет данных",
-            local_time: "🕒 Локальное время",
-            server_time: "🖥️ Время сервера (UTC-2)",
-            game_day: "📅 День игры",
-            timezone: "Часовой пояс",
             item_qty_err: "Количество > 0",
             select_item_err: "Выберите предмет",
             gear_lvl_err: "Целевой уровень должен быть выше текущего",
@@ -95,6 +93,7 @@ const i18n = {
             conv_chain_desc: "Цепочка: 4 Стали ▸ 1 Стальной компонент ▸ 4 ▸ Жаропрочное золото ▸ 4 ▸ Композитный материал ▸ 4 ▸ Проводящий кристалл (1 кристалл = 256 стали).",
             star1_label: "1 звезда (5×12 000 камней, 5×145 кристаллов, 5×20 м нефти)",
             star2_label: "2 звезда (5×16 000 камней, 5×200 кристаллов, 5×30 м нефти)",
+            vs_hint: "🎯 очки VS",
             bonus_labels: {
                 "vs_radar": "📡 Радар",
                 "vs_build": "🏗️ Строительство",
@@ -173,6 +172,13 @@ const i18n = {
             { 
                 title: "🏗️ Приоритеты строительства", 
                 body: "1. База (открывает новые уровни).\n2. Тренировочные лагеря (увеличивают уровень войск).\n3. Научный центр (ускоряет развитие).\n4. Полигон (увеличивает размер отряда).\n\nСовет: Стройте только то, что необходимо для улучшения Базы, чтобы быстрее дойти до Т9/Т10 войск." 
+            }
+        ],
+        videos: [
+            {
+                title: "Переход между серверами",
+                description: "Видео-инструкция: как перепрыгнуть с одного сервера на другой.",
+                src: "assets/video/ServJ.mp4"
             }
         ],
         phase_names: ["Радар", "Строительство", "Технологии", "Герой", "Боеготовность", "Рейд"],
@@ -301,6 +307,7 @@ const i18n = {
         next_event: "➡ {event} in {h}h {m}m",
         no_next_event: "➡ No upcoming events",
         current_active_event: "🔥 NOW ACTIVE: {event}",
+        current_active_phase_event: "🔥 Phase {phase}: {event}",
         day_label: "Day",
         local_time: "🕒 Local Time",
         server_time: "🖥️ Server Time (UTC-2)",
@@ -330,6 +337,7 @@ const i18n = {
             itemupgrade: "⚡ Golden Items",
             guides: "📖 Guides",
             codes: "🎁 Codes",
+            video: "🎥 Video",
             support: "🙏 Support"
         },
         ui: {
@@ -368,10 +376,6 @@ const i18n = {
             current_phase: "🔹 Current phase",
             next_phase_rem: "⏰ To next phase",
             no_next_phase: "⏰ To next phase: no data",
-            local_time: "🕒 Local Time",
-            server_time: "🖥️ Server Time (UTC-2)",
-            game_day: "📅 Game Day",
-            timezone: "Timezone",
             item_qty_err: "Quantity > 0",
             select_item_err: "Select an item",
             gear_lvl_err: "Target level must be higher than current level",
@@ -389,6 +393,7 @@ const i18n = {
             conv_chain_desc: "Chain: 4 Steel ▸ 1 Steel Component ▸ 4 ▸ Heat-resistant Gold ▸ 4 ▸ Composite Material ▸ 4 ▸ Conductive Crystal (1 crystal = 256 steel).",
             star1_label: "1 star (5×12,000 stones, 5×145 crystals, 5×20m oil)",
             star2_label: "2 star (5×16,000 stones, 5×200 crystals, 5×30m oil)",
+            vs_hint: "🎯 VS Points",
             bonus_labels: {
                 "vs_radar": "📡 Radar",
                 "vs_build": "🏗️ Construction",
@@ -467,6 +472,13 @@ const i18n = {
             { 
                 title: "🏗️ Construction Priorities", 
                 body: "1. Base (unlocks new levels).\n2. Training camps (increase troop level).\n3. Science Center (speeds up development).\n4. Training Ground (increases squad size).\n\nTip: Build only what is necessary to upgrade the Base to reach T9/T10 troops faster." 
+            }
+        ],
+        videos: [
+            {
+                title: "Server Jump",
+                description: "Video guide: how to jump from one server to another.",
+                src: "assets/video/ServJ.mp4"
             }
         ],
         phase_names: ["Radar", "Construction", "Technology", "Hero", "Readiness", "Raid"],
