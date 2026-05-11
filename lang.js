@@ -178,7 +178,7 @@ const i18n = {
             {
                 title: "Переход между серверами",
                 description: "Видео-инструкция: как перепрыгнуть с одного сервера на другой.",
-                src: "assets/video/ServJ.mp4"
+                src: "assets/video/ServJ.webm"
             }
         ],
         phase_names: ["Радар", "Строительство", "Технологии", "Герой", "Боеготовность", "Рейд"],
@@ -478,7 +478,7 @@ const i18n = {
             {
                 title: "Server Jump",
                 description: "Video guide: how to jump from one server to another.",
-                src: "assets/video/ServJ.mp4"
+                src: "assets/video/ServJ.webm"
             }
         ],
         phase_names: ["Radar", "Construction", "Technology", "Hero", "Readiness", "Raid"],
