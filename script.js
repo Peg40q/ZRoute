@@ -431,7 +431,7 @@ function buildVideos() {
         const desc = document.createElement("div"); desc.className = "video-description"; desc.innerText = v.description;
         const wrapper = document.createElement("div"); wrapper.className = "video-wrapper";
         const video = document.createElement("video"); video.controls = true; video.playsInline = true;
-        const source = document.createElement("source"); source.src = v.src; source.type = "video/mp4";
+        const source = document.createElement("source"); source.src = v.src; source.type = "video/webm";
         video.appendChild(source);
         video.innerText = "Ваш браузер не поддерживает видео.";
         wrapper.appendChild(video);
