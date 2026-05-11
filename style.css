@@ -19,6 +19,7 @@
     --support-bg: #ffe6f0;
     --support-border: #ff69b4;
     --guide-accent: #ffb74d;
+    --video-accent: #26c6da;
 }
 body.dark {
     --bg: #1a1d23;
@@ -37,6 +38,7 @@ body.dark {
     --support-bg: #3a1e2a;
     --support-border: #ff69b4;
     --guide-accent: #ff8c00;
+    --video-accent: #26c6da;
 }
 body {
     font-family: 'Segoe UI', system-ui, sans-serif;
@@ -242,6 +244,17 @@ body {
 body.dark .event-timer-item.highlight {
     background: #4a2020;
     border-color: #ff5555;
+}
+.vs-hint {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #e53935;
+    margin-top: 2px;
+    text-align: center;
+}
+body.dark .vs-hint {
+    color: #ff8888;
 }
 @keyframes urgentPulse {
     0% { box-shadow: 0 0 0 0 rgba(229,57,53,0.5); }
@@ -877,4 +890,80 @@ body.dark .event-timer-item.highlight {
 .guide-content p {
     margin: 0.6em 0;
     line-height: 1.5;
+}
+.code-card {
+    background: var(--card);
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--card-border);
+    border-radius: 16px;
+    padding: 12px 18px;
+    margin: 8px auto;
+    text-align: center;
+    font-weight: 700;
+    font-size: 1.1rem;
+    letter-spacing: 1px;
+    cursor: pointer;
+    box-shadow: var(--shadow);
+    transition: all 0.2s;
+    max-width: 280px;
+}
+.code-card:hover {
+    background: var(--accent-light);
+    border-color: var(--accent);
+    transform: scale(1.02);
+}
+.code-card.copied-flash {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+}
+.video-card {
+    background: var(--card);
+    border-radius: 20px;
+    margin-bottom: 14px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+}
+.video-header {
+    background: linear-gradient(135deg, var(--video-accent), #00acc1);
+    color: white;
+    padding: 14px 18px;
+    cursor: pointer;
+    font-weight: 700;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: none;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+.video-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease;
+    background: var(--bg);
+    color: var(--text);
+}
+.video-card.open .video-content {
+    max-height: 2000px;
+    padding: 12px;
+}
+.video-description {
+    margin: 8px 0 12px;
+    font-size: 0.9rem;
+    padding: 8px 12px;
+    background: var(--card);
+    border-radius: 12px;
+    box-shadow: var(--inset-shadow);
+}
+.video-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 0;
+}
+.video-wrapper video {
+    max-width: 100%;
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+    background: #000;
 }
