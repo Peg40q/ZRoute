@@ -2,9 +2,16 @@ document.addEventListener('contextmenu', e => e.preventDefault());
 document.addEventListener('keydown', e => { if (e.ctrlKey && (e.key === 'u' || e.key === 's' || e.key === 'c' || e.key === 'i' || e.key === 'j')) e.preventDefault(); });
 
 let currentLang = localStorage.getItem('lang') || 'ru';
-let currentTZ = localStorage.getItem('tz') || '3';
+let currentTZ = (() => {
+    const stored = localStorage.getItem('tz');
+    if (stored === '3' || stored === null || stored === undefined) {
+        localStorage.setItem('tz', '7');
+        return '7';
+    }
+    return stored;
+})();
 
-const GAME_TZ = 3;
+const GAME_TZ = 7;
 
 function getNow() {
     const now = new Date();
@@ -56,27 +63,18 @@ function translateEvent(name) {
 }
 
 function buildFixedCalendar() {
-    const days = [[], [], [], [], [], [], []];
-    for (let i = 0; i < 7; i++) {
-        for (let j = 0; j < 6; j++) {
-            const idx = i * 6 + j;
-            days[i].push(rawCalendar[idx][2]);
-        }
+    const entries = [];
+    for (let i = 0; i < rawCalendar.length; i++) {
+        const [dayStr, timeStr, eventName] = rawCalendar[i];
+        const dayNum = parseInt(dayStr.split(" ")[1]);
+        const tr = translateTime(timeStr);
+        entries.push({
+            dayNum: dayNum,
+            time: tr.time,
+            event: translateEvent(eventName)
+        });
     }
-    const newData = [];
-    for (let i = 0; i < 7; i++) {
-        const cur = i + 1;
-        for (let j = 0; j < 5; j++) {
-            const tr = translateTime(rawCalendar[i*6+j][1]);
-            const dayLabel = t('ui.calendar_day', {n: (cur + tr.dayShift - 1 + 7) % 7 + 1});
-            newData.push([dayLabel, tr.time, translateEvent(days[i][j])]);
-        }
-        const tr01 = translateTime("01:00:00");
-        let calDay01 = (cur % 7) + 1;
-        const dayLabel01 = t('ui.calendar_day', {n: (calDay01 + tr01.dayShift - 1 + 7) % 7 + 1});
-        newData.push([dayLabel01, tr01.time, translateEvent(days[i][5])]);
-    }
-    return newData;
+    return entries;
 }
 
 function getGameDayCorrected() {
@@ -94,12 +92,12 @@ function getWeekdayName() {
 
 function formatTime(seconds) {
     seconds = Math.floor(Math.abs(seconds));
-    const d=Math.floor(seconds/86400);
-    seconds%=86400;
-    const h=Math.floor(seconds/3600);
-    seconds%=3600;
-    const m=Math.floor(seconds/60);
-    const s=seconds%60;
+    const d = Math.floor(seconds / 86400);
+    seconds %= 86400;
+    const h = Math.floor(seconds / 3600);
+    seconds %= 3600;
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
     return `${d} ${t('ui.st_d')} ${h} ${t('ui.st_h')} ${m} ${t('ui.st_m')} ${s} ${t('ui.st_s')}`;
 }
 
@@ -205,10 +203,20 @@ function updateEventTimers() {
     if (!container) return;
     const weekdayRu = ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"][getGameNow().getDay()];
     const important = phaseEvents[weekdayRu] || [];
-    let html = '';
+    const items = [];
     allTrackedEvents.forEach(te => {
         const timeInfo = getTimeToEvent(te.event);
         const isImportant = important.includes(te.event);
+        items.push({ te, timeInfo, isImportant });
+    });
+    items.sort((a, b) => {
+        const aSec = a.timeInfo ? a.timeInfo.totalSec : Number.MAX_SAFE_INTEGER;
+        const bSec = b.timeInfo ? b.timeInfo.totalSec : Number.MAX_SAFE_INTEGER;
+        return aSec - bSec;
+    });
+    let html = '';
+    items.forEach(item => {
+        const { te, timeInfo, isImportant } = item;
         const cls = isImportant ? 'event-timer-item highlight' : 'event-timer-item';
         const label = i18n[currentLang].event_labels[te.event] || te.event;
         const timeStr = timeInfo ? `${timeInfo.hours}${t('ui.st_h')} ${timeInfo.minutes}${t('ui.st_m')}` : '—';
@@ -387,19 +395,25 @@ function buildCalendarGroups() {
     const days = i18n[currentLang].calendar_days;
     const grouped = {};
     calendarData.forEach(entry => {
-        const day = entry[0];
-        if (!grouped[day]) grouped[day] = [];
-        grouped[day].push({ time: entry[1], name: entry[2] });
+        const dayKey = entry.dayNum;
+        if (!grouped[dayKey]) grouped[dayKey] = [];
+        grouped[dayKey].push({ time: entry.time, event: entry.event });
     });
     for (let i = 1; i <= 7; i++) {
-        const dayKey = t('ui.calendar_day', {n: i});
-        const events = grouped[dayKey] || [];
+        const events = grouped[i] || [];
         const card = document.createElement("div"); card.className = "calendar-group";
         const header = document.createElement("div"); header.className = "calendar-group-header";
         header.innerHTML = `<span>${days[i-1]}</span><span class="toggle-icon">▼</span>`;
         const content = document.createElement("div"); content.className = "calendar-group-content";
-        events.forEach(ev => { const evDiv = document.createElement("div"); evDiv.className = "calendar-event"; evDiv.innerHTML = `<span>${ev.time}</span><span>${ev.name}</span>`; content.appendChild(evDiv); });
-        header.onclick = () => { card.classList.toggle("open"); header.querySelector(".toggle-icon").innerText = card.classList.contains("open") ? "▲" : "▼"; };
+        events.forEach(ev => {
+            const evDiv = document.createElement("div"); evDiv.className = "calendar-event";
+            evDiv.innerHTML = `<span>${ev.time}</span><span>${ev.event}</span>`;
+            content.appendChild(evDiv);
+        });
+        header.onclick = () => {
+            card.classList.toggle("open");
+            header.querySelector(".toggle-icon").innerText = card.classList.contains("open") ? "▲" : "▼";
+        };
         card.appendChild(header); card.appendChild(content); container.appendChild(card);
     }
 }
@@ -427,16 +441,13 @@ function buildVideos() {
         const card = document.createElement("div"); card.className = "video-card";
         const head = document.createElement("div"); head.className = "video-header";
         head.innerHTML = `<span>${v.title}</span><span class="toggle-icon">▼</span>`;
-
         const body = document.createElement("div"); body.className = "video-content";
         const desc = document.createElement("div"); desc.className = "video-description";
         desc.innerText = v.description;
         const wrapper = document.createElement("div"); wrapper.className = "video-wrapper";
         wrapper.innerHTML = `<video controls width="100%" src="${v.src}" type="video/webm"></video>`;
-
         body.appendChild(desc);
         body.appendChild(wrapper);
-
         head.onclick = () => {
             card.classList.toggle("open");
             const icon = head.querySelector(".toggle-icon");
@@ -446,7 +457,6 @@ function buildVideos() {
                 if (vid) vid.load();
             }
         };
-
         card.appendChild(head);
         card.appendChild(body);
         cont.appendChild(card);
