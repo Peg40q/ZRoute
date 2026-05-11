@@ -645,14 +645,10 @@ function updateLanguage() {
     if (langBtn) langBtn.innerText = t('lang_name');
     const mainTitleSub = document.getElementById("mainTitleSub");
     if (mainTitleSub) mainTitleSub.innerHTML = t('ui.main_subtitle');
-    const localTimeLabel = document.getElementById("localTimeLabel");
-    if (localTimeLabel) localTimeLabel.innerText = t('ui.local_time');
-    const serverTimeLabel = document.getElementById("serverTimeLabel");
-    if (serverTimeLabel) serverTimeLabel.innerText = t('ui.server_time');
-    const gameDayLabel = document.getElementById("gameDayLabel");
-    if (gameDayLabel) gameDayLabel.innerText = t('ui.game_day');
-    const tzLabel = document.getElementById("tzLabel");
-    if (tzLabel) tzLabel.innerText = t('ui.timezone');
+    document.getElementById("localTimeLabel").innerText = i18n[currentLang].local_time;
+    document.getElementById("serverTimeLabel").innerText = i18n[currentLang].server_time;
+    document.getElementById("gameDayLabel").innerText = i18n[currentLang].game_day;
+    document.getElementById("tzLabel").innerText = i18n[currentLang].timezone;
     const themeBtn = document.getElementById("themeToggle");
     if (themeBtn) {
         const isDark = document.body.classList.contains('dark');
