@@ -427,18 +427,29 @@ function buildVideos() {
         const card = document.createElement("div"); card.className = "video-card";
         const head = document.createElement("div"); head.className = "video-header";
         head.innerHTML = `<span>${v.title}</span><span class="toggle-icon">▼</span>`;
+
         const body = document.createElement("div"); body.className = "video-content";
-        const desc = document.createElement("div"); desc.className = "video-description"; desc.innerText = v.description;
+        const desc = document.createElement("div"); desc.className = "video-description";
+        desc.innerText = v.description;
         const wrapper = document.createElement("div"); wrapper.className = "video-wrapper";
-        const video = document.createElement("video"); video.controls = true; video.playsInline = true;
-        const source = document.createElement("source"); source.src = v.src; source.type = "video/webm";
-        video.appendChild(source);
-        video.innerText = "Ваш браузер не поддерживает видео.";
-        wrapper.appendChild(video);
+        wrapper.innerHTML = `<video controls width="100%" src="${v.src}" type="video/webm"></video>`;
+
         body.appendChild(desc);
         body.appendChild(wrapper);
-        head.onclick = () => { card.classList.toggle("open"); const ic = head.querySelector(".toggle-icon"); ic.innerText = card.classList.contains("open") ? "▲" : "▼"; };
-        card.appendChild(head); card.appendChild(body); cont.appendChild(card);
+
+        head.onclick = () => {
+            card.classList.toggle("open");
+            const icon = head.querySelector(".toggle-icon");
+            icon.innerText = card.classList.contains("open") ? "▲" : "▼";
+            if (card.classList.contains("open")) {
+                const vid = body.querySelector("video");
+                if (vid) vid.load();
+            }
+        };
+
+        card.appendChild(head);
+        card.appendChild(body);
+        cont.appendChild(card);
     });
 }
 
