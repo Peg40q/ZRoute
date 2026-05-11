@@ -186,9 +186,14 @@ function updateCurrentEventBanner() {
     const banner = document.getElementById("currentEventBanner");
     if (!banner) return;
     const activeEvent = getCurrentActiveEvent();
-    if (activeEvent) {
-        const label = i18n[currentLang].event_labels[activeEvent] || activeEvent;
-        banner.innerText = t('current_active_event', { event: label });
+    const { currentPhase } = getCurrentPhaseAndNext();
+    if (activeEvent && currentPhase) {
+        const eventLabel = i18n[currentLang].event_labels[activeEvent] || activeEvent;
+        banner.innerText = t('current_active_phase_event', { phase: currentPhase.name, event: eventLabel });
+        banner.classList.add("active");
+    } else if (activeEvent) {
+        const eventLabel = i18n[currentLang].event_labels[activeEvent] || activeEvent;
+        banner.innerText = t('current_active_event', { event: eventLabel });
         banner.classList.add("active");
     } else {
         banner.classList.remove("active");
@@ -207,7 +212,8 @@ function updateEventTimers() {
         const cls = isImportant ? 'event-timer-item highlight' : 'event-timer-item';
         const label = i18n[currentLang].event_labels[te.event] || te.event;
         const timeStr = timeInfo ? `${timeInfo.hours}${t('ui.st_h')} ${timeInfo.minutes}${t('ui.st_m')}` : '—';
-        html += `<div class="${cls}"><span>${te.icon} ${label}:</span> <strong>${timeStr}</strong></div>`;
+        const vsHint = isImportant ? `<span class="vs-hint">${t('ui.vs_hint')}</span>` : '';
+        html += `<div class="${cls}"><span>${te.icon} ${label}:</span> <strong>${timeStr}</strong>${vsHint}</div>`;
     });
     container.innerHTML = html;
 }
@@ -407,6 +413,30 @@ function buildGuides() {
         const head = document.createElement("div"); head.className = "guide-header";
         head.innerHTML = `<span>${g.title}</span><span class="toggle-icon">▼</span>`;
         const body = document.createElement("div"); body.className = "guide-content"; body.innerHTML = g.content;
+        head.onclick = () => { card.classList.toggle("open"); const ic = head.querySelector(".toggle-icon"); ic.innerText = card.classList.contains("open") ? "▲" : "▼"; };
+        card.appendChild(head); card.appendChild(body); cont.appendChild(card);
+    });
+}
+
+function buildVideos() {
+    const cont = document.getElementById("videosContainer");
+    if (!cont) return;
+    cont.innerHTML = "";
+    const videos = i18n[currentLang].videos || [];
+    videos.forEach(v => {
+        const card = document.createElement("div"); card.className = "video-card";
+        const head = document.createElement("div"); head.className = "video-header";
+        head.innerHTML = `<span>${v.title}</span><span class="toggle-icon">▼</span>`;
+        const body = document.createElement("div"); body.className = "video-content";
+        const desc = document.createElement("div"); desc.className = "video-description"; desc.innerText = v.description;
+        const wrapper = document.createElement("div"); wrapper.className = "video-wrapper";
+        const video = document.createElement("video"); video.controls = true; video.playsInline = true;
+        const source = document.createElement("source"); source.src = v.src; source.type = "video/mp4";
+        video.appendChild(source);
+        video.innerText = "Ваш браузер не поддерживает видео.";
+        wrapper.appendChild(video);
+        body.appendChild(desc);
+        body.appendChild(wrapper);
         head.onclick = () => { card.classList.toggle("open"); const ic = head.querySelector(".toggle-icon"); ic.innerText = card.classList.contains("open") ? "▲" : "▼"; };
         card.appendChild(head); card.appendChild(body); cont.appendChild(card);
     });
@@ -624,6 +654,7 @@ function updateLanguage() {
     buildCalendarGroups();
     buildGuides();
     buildCodes();
+    buildVideos();
     updateReminder();
     updateEventTimers();
     updateCurrentEventBanner();
