@@ -6,8 +6,8 @@ const i18n = {
         loading: "Загрузка...",
         next_event: "➡ {event} через {h} ч {m} мин",
         no_next_event: "➡ Нет ближайших событий",
-        current_active_event: "🔥 СЕЙЧАС ИДЁТ: {event}",
-        current_active_phase_event: "🔥 Фаза {phase}: {event}",
+        banner_phase_event: "Текущая фаза: {phase}<br>Идёт: {event}",
+        banner_event: "Идёт событие: {event}",
         day_label: "День",
         local_time: "🕒 Локальное время",
         server_time: "🖥️ Время сервера (UTC-2)",
@@ -292,11 +292,11 @@ const i18n = {
             "Рейд":[["За каждого уничтоженного бойца T7",18],["За каждого уничтоженного солдата T8",20],["За каждого уничтоженного солдата T9",23],["За каждого уничтоженного солдата T10",25],["За каждого потерянного солдата T1",4],["За каждого потерянного солдата T2",6],["За каждого потерянного солдата T3",8],["За каждого погибшего солдата T4",10],["За каждого погибшего солдата T5",12],["За каждого погибшего солдата T6",14],["За каждого погибшего солдата T7",16],["За каждого погибшего солдата T8",18],["За каждого погибшего солдата T9",20],["За каждого потерянного бойца T10",22],["Отправить 1 Легендарный Транспортник",200000]]
         },
         event_labels: {
-            "Улучшение бойца": "Боец",
-            "Улучшение Героя": "Герой",
-            "Строительство Базы": "Стройка",
-            "Исследования технологий": "Наука",
-            "Обучить Солдат": "Тренировка"
+            "Улучшение бойца": "Улучшение бойца",
+            "Улучшение Героя": "Улучшение героя",
+            "Строительство Базы": "Строительство базы",
+            "Исследования технологий": "Исследования",
+            "Обучить Солдат": "Тренировка солдат"
         }
     },
     en: {
@@ -306,8 +306,8 @@ const i18n = {
         loading: "Loading...",
         next_event: "➡ {event} in {h}h {m}m",
         no_next_event: "➡ No upcoming events",
-        current_active_event: "🔥 NOW ACTIVE: {event}",
-        current_active_phase_event: "🔥 Phase {phase}: {event}",
+        banner_phase_event: "Current phase: {phase}<br>Active: {event}",
+        banner_event: "Active event: {event}",
         day_label: "Day",
         local_time: "🕒 Local Time",
         server_time: "🖥️ Server Time (UTC-2)",
@@ -592,11 +592,11 @@ const i18n = {
             "Raid":[["Per T7 soldier destroyed",18],["Per T8 soldier destroyed",20],["Per T9 soldier destroyed",23],["Per T10 soldier destroyed",25],["Per T1 soldier lost",4],["Per T2 soldier lost",6],["Per T3 soldier lost",8],["Per T4 soldier died",10],["Per T5 soldier died",12],["Per T6 soldier died",14],["Per T7 soldier died",16],["Per T8 soldier died",18],["Per T9 soldier died",20],["Per T10 soldier lost",22],["Send 1 Legendary Transport",200000]]
         },
         event_labels: {
-            "Улучшение бойца": "Fighter",
-            "Улучшение Героя": "Hero",
-            "Строительство Базы": "Build",
-            "Исследования технологий": "Research",
-            "Обучить Солдат": "Train"
+            "Улучшение бойца": "Fighter Upgrade",
+            "Улучшение Героя": "Hero Upgrade",
+            "Строительство Базы": "Base Construction",
+            "Исследования технологий": "Tech Research",
+            "Обучить Солдат": "Train Soldiers"
         }
     }
 };
