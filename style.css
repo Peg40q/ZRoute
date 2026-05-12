@@ -279,6 +279,35 @@ body.dark .vs-hint {
     margin: 0;
     padding-left: 20px;
 }
+.vs-actions-block {
+    background: var(--card);
+    backdrop-filter: blur(10px);
+    border-left: 5px solid #2ecc71;
+    padding: 0.6rem 1rem;
+    margin-bottom: 1rem;
+    border-radius: 14px;
+    font-size: 0.85rem;
+    box-shadow: var(--inset-shadow);
+}
+.vs-actions-block strong {
+    display: block;
+    margin-bottom: 5px;
+    color: #27ae60;
+}
+.vs-actions-block ul {
+    margin: 0;
+    padding-left: 20px;
+    list-style: none;
+}
+.vs-actions-block li {
+    margin-bottom: 3px;
+}
+body.dark .vs-actions-block {
+    border-left-color: #2ecc71;
+}
+body.dark .vs-actions-block strong {
+    color: #2ecc71;
+}
 .tabs {
     display: flex;
     flex-wrap: wrap;
