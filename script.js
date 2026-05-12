@@ -143,6 +143,47 @@ const phaseEvents = {
     "Воскресенье": []
 };
 
+const vsActionsByDay = {
+    "Понедельник": [
+        { key: "Завершить событие Радара", icon: "📡" },
+        { key: "Использовать 1 Часть бойца", icon: "⚔️" },
+        { key: "Потратить 1 Выносливость", icon: "💪" },
+        { key: "Собрать 100 ед. еды", icon: "🌾" }
+    ],
+    "Вторник": [
+        { key: "За каждую минуту ускорения постройки", icon: "⏱️" },
+        { key: "Выполнить 1 оранжевую миссию Спецопераций", icon: "🟠" },
+        { key: "Отправить 1 Легендарный Транспортник", icon: "🚛" }
+    ],
+    "Среда": [
+        { key: "Завершить событие Радара", icon: "📡" },
+        { key: "Использовать 1 минуту ускорения исследования", icon: "⏱️" },
+        { key: "Потратить 1 Научные данные", icon: "📊" },
+        { key: "Открыть сундук с компонентами бойца", icon: "📦" }
+    ],
+    "Четверг": [
+        { key: "Использовать 660 опыта Героя", icon: "🧪" },
+        { key: "Нанять героя 1 раз", icon: "🃏" },
+        { key: "Использовать 1 Мифический Осколок Героя", icon: "💎" },
+        { key: "Использовать 1 Эпический Осколок Героя", icon: "💠" },
+        { key: "Использовать 1 Редкий Осколок Героя", icon: "🔹" },
+        { key: "Использовать 1 Книгу опыта навыков", icon: "📖" }
+    ],
+    "Пятница": [
+        { key: "Завершить событие Радара", icon: "📡" },
+        { key: "За каждую минуту ускорения постройки", icon: "⏱️" },
+        { key: "За каждую минуту ускорения исследований", icon: "⏱️" },
+        { key: "Ускорение тренировок (1 мин.)", icon: "⏱️" },
+        { key: "Обучить Т1 Солдата", icon: "🎓" }
+    ],
+    "Суббота": [
+        { key: "За каждого уничтоженного солдата T10", icon: "💀" },
+        { key: "За каждого потерянного солдата T10", icon: "☠️" },
+        { key: "Отправить 1 Легендарный Транспортник", icon: "🚛" }
+    ],
+    "Воскресенье": []
+};
+
 const allTrackedEvents = [
     { event: "Улучшение бойца", icon: "⚔️" },
     { event: "Улучшение Героя", icon: "🦸" },
@@ -559,6 +600,29 @@ function updateTimeDisplay() {
     }
 }
 
+function updateVsActionsToday() {
+    const block = document.getElementById("vsActionsBlock");
+    if (!block) return;
+    const now = getGameNow();
+    const daysRu = ["Воскресенье", "Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота"];
+    const day = daysRu[now.getDay()];
+    const actions = vsActionsByDay[day] || [];
+    if (actions.length === 0) {
+        block.innerHTML = "";
+        block.style.display = "none";
+        return;
+    }
+    block.style.display = "block";
+    const scoreActions = i18n[currentLang].score_actions;
+    let html = `<strong>⚡ ${day}: очки VS за действия</strong><ul>`;
+    actions.forEach(item => {
+        const text = scoreActions[item.key] || item.key;
+        html += `<li>${item.icon} ${text}</li>`;
+    });
+    html += '</ul>';
+    block.innerHTML = html;
+}
+
 function updateReminder() {
     const day = getWeekdayName();
     const daysEn = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -688,6 +752,7 @@ function updateLanguage() {
     buildCodes();
     buildVideos();
     updateReminder();
+    updateVsActionsToday();
     updateEventTimers();
     updateCurrentEventBanner();
     updateTimeDisplay();
@@ -744,7 +809,7 @@ document.addEventListener("DOMContentLoaded", () => {
         themeToggle.innerText = isDark ? t('theme_light') : t('theme_dark');
     };
     updateLanguage();
-    setInterval(() => { updateTimeDisplay(); updateEventTimers(); updateCurrentEventBanner(); updateReminder(); }, 1000);
+    setInterval(() => { updateTimeDisplay(); updateEventTimers(); updateCurrentEventBanner(); updateReminder(); updateVsActionsToday(); }, 1000);
     document.getElementById("collapseTimeBtn").addEventListener("click", () => document.getElementById("timePanel").classList.toggle("collapsed"));
     const calcBody = document.getElementById("calcBody"), calcIcon = document.getElementById("calcToggleIcon");
     let calcCollapsed = false;
