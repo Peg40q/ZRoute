@@ -394,7 +394,6 @@ function updateScoreForPhase(phase, map, customPoints = null) {
 function buildScoreCalculator() {
     const container = document.getElementById("scoreContainer");
     container.innerHTML = "";
-    // Добавляем предупреждение
     const warn = document.createElement("div");
     warn.className = "score-warning";
     warn.innerText = t('ui.score_warning');
@@ -702,11 +701,13 @@ function calcStarCost() {
 function buildCodes() {
     const container = document.getElementById("codesContainer");
     if (!container) return;
+    // Полный список всех кодов, которые вы перечислили (уникальные)
     const codes = [
-        "ZRR2026","ZRR6666","ZRR999","DC4KFBG","VK10KYUT","VK12KDGH","DC6KFEO",
-        "VK15KOKL","DC8KYHJ","VK20KDSM","DC10KSDF","VK35KYGD",
-        "VK60KPEZ","26CHOCO","VK55KHLC","ZRR100S","WELCOME26","LOUNGE619",
-        "DC18KZMR","ZRRKR617","VK45KNQX"
+        "ZRR2026", "ZRR6666", "ZRR999", "DC4KFBG", "VK10KYUT", "VK12KDGH", "DC6KFEO",
+        "VK15KOKL", "DC8KYHJ", "VK20KDSM", "DC10KSDF", "VK35KYGD",
+        "VK60KPEZ", "26CHOCO", "VK55KHLC", "ZRR100S", "WELCOME26", "LOUNGE619",
+        "DC18KZMR", "ZRRKR617", "VK45KNQX",
+        "VK25KYYH", "VK30KBCV", "VK40KECI", "ZR26PLAY", "DC12KHVJ", "DC15KSDF", "ZRDAD26"
     ];
     container.innerHTML = "";
     codes.forEach(code => {
@@ -763,7 +764,6 @@ function updateLanguage() {
     document.getElementById("star3Label").innerText = t('ui.star3_label');
     document.getElementById("star4Label").innerText = t('ui.star4_label');
 
-    // Обновляем памятку о чертежах
     const noteEl = document.getElementById("blueprintNote");
     if (noteEl) noteEl.innerText = t('ui.blueprint_note');
 
