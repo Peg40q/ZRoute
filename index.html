@@ -12,7 +12,8 @@
         <span class="title-line">Z Route: Redemption</span>
         <span class="title-line" id="mainTitleSub"><span class="paw">🐾</span> ЕГО ПУШИСТЕЙШЕСТВО <span class="paw">🐾</span></span>
     </h1>
-    <div class="header-controls">
+    <button class="toggle-controls-btn" id="toggleControlsBtn">⚙️</button>
+    <div class="header-controls" id="headerControls">
         <div class="tz-control">
             <span id="tzLabel">Часовой пояс</span>
             <select id="tzSelect"></select>
@@ -155,22 +156,32 @@
             <div id="gearResult" class="resource-result">Очищенных камней: 0<br>Нефти: 0</div>
         </div>
         <div class="upgrade-calc">
-            <h3>⭐ Прокачка звёзд (1⭐ и 2⭐)</h3>
-            <p>Для получения звезды нужно выполнить 5 улучшений по фиксированной цене.</p>
-            <div class="radio-group">
-                <label class="radio-custom" id="star1Label">
+            <h3>⭐ Прокачка звёзд (1⭐ – 4⭐)</h3>
+            <p>Для получения звезды нужно выполнить 5 улучшений по фиксированной цене. Пятое улучшение требует чертежи UR.</p>
+            <div class="radio-group" id="starRadios">
+                <label class="radio-custom">
                     <input type="radio" name="starType" value="star1" checked>
                     <span class="radio-checkmark"></span>
-                    1 звезда (5×12 000 камней, 5×145 кристаллов, 5×20 м нефти)
+                    <span class="star-label-text" id="star1Label"></span>
                 </label>
-                <label class="radio-custom" id="star2Label">
+                <label class="radio-custom">
                     <input type="radio" name="starType" value="star2">
                     <span class="radio-checkmark"></span>
-                    2 звезда (5×16 000 камней, 5×200 кристаллов, 5×30 м нефти)
+                    <span class="star-label-text" id="star2Label"></span>
+                </label>
+                <label class="radio-custom">
+                    <input type="radio" name="starType" value="star3">
+                    <span class="radio-checkmark"></span>
+                    <span class="star-label-text" id="star3Label"></span>
+                </label>
+                <label class="radio-custom">
+                    <input type="radio" name="starType" value="star4">
+                    <span class="radio-checkmark"></span>
+                    <span class="star-label-text" id="star4Label"></span>
                 </label>
             </div>
             <button id="calcStarCost">Рассчитать стоимость звезды</button>
-            <div id="starResult" class="resource-result">Очищенных камней: 0<br>Проводящих кристаллов: 0<br>Нефти: 0</div>
+            <div id="starResult" class="resource-result">Очищенных камней: 0<br>Проводящих кристаллов: 0<br>Нефти: 0<br>Чертежей UR: 0</div>
         </div>
     </div>
 
