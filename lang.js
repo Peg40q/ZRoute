@@ -64,14 +64,17 @@ const i18n = {
             gear_desc: "Введите текущий и целевой уровень. Стоимость в очищенных камнях и нефти.",
             current_lvl: "Текущий уровень",
             target_lvl: "Целевой уровень",
-            stars_title: "⭐ Прокачка звёзд (1⭐ и 2⭐)",
-            stars_desc: "Для получения звезды нужно выполнить 5 улучшений по фиксированной цене.",
+            stars_title: "⭐ Прокачка звёзд (1⭐ – 4⭐)",
+            stars_desc: "Для получения звезды нужно выполнить 5 улучшений по фиксированной цене. Пятое улучшение требует чертежи UR.",
             star1: "1 звезда (5×12 000 камней, 5×145 кристаллов, 5×20 м нефти)",
             star2: "2 звезда (5×16 000 камней, 5×200 кристаллов, 5×30 м нефти)",
+            star3: "3 звезда (5×20 000 камней, 5×235 кристаллов, 5×40 м нефти)",
+            star4: "4 звезда (5×24 000 камней, 5×290 кристаллов, 5×45 м нефти)",
             calc_star: "Рассчитать стоимость звезды",
             stones: "Очищенных камней",
             oil: "Нефти",
             crystals: "Проводящих кристаллов",
+            ur_blueprints: "Чертежей UR",
             reminders: "Напоминание на",
             current_phase: "🔹 Текущая фаза",
             next_phase_rem: "⏰ До следующей фазы",
@@ -91,8 +94,10 @@ const i18n = {
             vs_bonus_note: "Бонусы суммируются. Очки пересчитываются автоматически.",
             items_header: "📦 Предметы (клик для выбора):",
             conv_chain_desc: "Цепочка: 4 Стали ▸ 1 Стальной компонент ▸ 4 ▸ Жаропрочное золото ▸ 4 ▸ Композитный материал ▸ 4 ▸ Проводящий кристалл (1 кристалл = 256 стали).",
-            star1_label: "1 звезда (5×12 000 камней, 5×145 кристаллов, 5×20 м нефти)",
-            star2_label: "2 звезда (5×16 000 камней, 5×200 кристаллов, 5×30 м нефти)",
+            star1_label: "1 звезда (5×12 000 камней, 5×145 кристаллов, 5×20 м нефти, 5 чертежей UR)",
+            star2_label: "2 звезда (5×16 000 камней, 5×200 кристаллов, 5×30 м нефти, 10 чертежей UR)",
+            star3_label: "3 звезда (5×20 000 камней, 5×235 кристаллов, 5×40 м нефти, 15 чертежей UR)",
+            star4_label: "4 звезда (5×24 000 камней, 5×290 кристаллов, 5×45 м нефти, 20 чертежей UR)",
             vs_hint: "🎯 очки VS",
             bonus_labels: {
                 "vs_radar": "📡 Радар",
@@ -138,7 +143,9 @@ const i18n = {
                 <p style="margin-top: 12px;">Или напишите в игре (потом добавим ТГ и мыло) <strong>РЕЗЕРВ</strong> для других способов.</p>
                 <p class="small-note" style="margin-top: 12px;">Данный сайт не является публичной офертой. Все платежи являются добровольными.</p>
             `,
-            calendar_day: "День {n}"
+            calendar_day: "День {n}",
+            score_warning: "⚠️ В связи с изменениями последних версий игры информация на этой вкладке может быть неактуальной. Мы работаем над обновлением.",
+            blueprint_note: "📐 Чертежи UR можно получить в магазине чести: 1 чертеж = 10 000 очков чести."
         },
         buildings: {
             "Полигон": "Полигон",
@@ -364,14 +371,17 @@ const i18n = {
             gear_desc: "Enter current and target levels. Cost in refined stones and oil.",
             current_lvl: "Current level",
             target_lvl: "Target level",
-            stars_title: "⭐ Star Leveling (1⭐ and 2⭐)",
-            stars_desc: "To get a star, you need to perform 5 upgrades at a fixed price.",
+            stars_title: "⭐ Star Leveling (1⭐ – 4⭐)",
+            stars_desc: "To get a star, you need to perform 5 upgrades at a fixed price. The 5th upgrade requires UR blueprints.",
             star1: "1 star (5×12,000 stones, 5×145 crystals, 5×20m oil)",
             star2: "2 star (5×16,000 stones, 5×200 crystals, 5×30m oil)",
+            star3: "3 star (5×20,000 stones, 5×235 crystals, 5×40m oil)",
+            star4: "4 star (5×24,000 stones, 5×290 crystals, 5×45m oil)",
             calc_star: "Calculate star cost",
             stones: "Refined stones",
             oil: "Oil",
             crystals: "Conductive crystals",
+            ur_blueprints: "UR Blueprints",
             reminders: "Reminder for",
             current_phase: "🔹 Current phase",
             next_phase_rem: "⏰ To next phase",
@@ -391,8 +401,10 @@ const i18n = {
             vs_bonus_note: "Bonuses are cumulative. Points are recalculated automatically.",
             items_header: "📦 Items (click to select):",
             conv_chain_desc: "Chain: 4 Steel ▸ 1 Steel Component ▸ 4 ▸ Heat-resistant Gold ▸ 4 ▸ Composite Material ▸ 4 ▸ Conductive Crystal (1 crystal = 256 steel).",
-            star1_label: "1 star (5×12,000 stones, 5×145 crystals, 5×20m oil)",
-            star2_label: "2 star (5×16,000 stones, 5×200 crystals, 5×30m oil)",
+            star1_label: "1 star (5×12,000 stones, 5×145 crystals, 5×20m oil, 5 UR blueprints)",
+            star2_label: "2 star (5×16,000 stones, 5×200 crystals, 5×30m oil, 10 UR blueprints)",
+            star3_label: "3 star (5×20,000 stones, 5×235 crystals, 5×40m oil, 15 UR blueprints)",
+            star4_label: "4 star (5×24,000 stones, 5×290 crystals, 5×45m oil, 20 UR blueprints)",
             vs_hint: "🎯 VS Points",
             bonus_labels: {
                 "vs_radar": "📡 Radar",
@@ -438,7 +450,9 @@ const i18n = {
                 <p style="margin-top: 12px;">Or message in-game (TG/Email later) <strong>RESERVE</strong> for other methods.</p>
                 <p class="small-note" style="margin-top: 12px;">This site is not a public offer. All payments are voluntary.</p>
             `,
-            calendar_day: "Day {n}"
+            calendar_day: "Day {n}",
+            score_warning: "⚠️ Due to changes in recent game versions, the information on this tab may be outdated. We are working on an update.",
+            blueprint_note: "📐 UR Blueprints can be obtained in the Honor Store: 1 blueprint = 10,000 Honor Points."
         },
         buildings: {
             "Полигон": "Training Ground",
