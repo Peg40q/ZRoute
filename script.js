@@ -1,4 +1,3 @@
-// script.js
 document.addEventListener('contextmenu', e => e.preventDefault());
 document.addEventListener('keydown', e => { if (e.ctrlKey && (e.key === 'u' || e.key === 's' || e.key === 'c' || e.key === 'i' || e.key === 'j')) e.preventDefault(); });
 
@@ -395,6 +394,12 @@ function updateScoreForPhase(phase, map, customPoints = null) {
 function buildScoreCalculator() {
     const container = document.getElementById("scoreContainer");
     container.innerHTML = "";
+    // Добавляем предупреждение
+    const warn = document.createElement("div");
+    warn.className = "score-warning";
+    warn.innerText = t('ui.score_warning');
+    container.appendChild(warn);
+
     const phases = i18n[currentLang].phase_names;
     const baseScore = i18n[currentLang].base_score;
     const categoryMap = { "Радар":"vs_radar","Строительство":"vs_build","Технологии":"vs_research","Герой":"vs_hire","Боеготовность":"vs_train","Рейд":"vs_kill",
@@ -686,16 +691,23 @@ function calcGearUpgrade() {
 }
 function calcStarCost() {
     let star = document.querySelector('input[name="starType"]:checked').value;
-    let stone, crystals, oil;
-    if (star === "star1") { stone = 12000 * 5; crystals = 145 * 5; oil = 20000000 * 5; }
-    else { stone = 16000 * 5; crystals = 200 * 5; oil = 30000000 * 5; }
-    document.getElementById("starResult").innerHTML = `${t('ui.stones')}: ${stone}<br>${t('ui.crystals')}: ${crystals}<br>${t('ui.oil')}: ${oil.toLocaleString()}`;
+    let stone, crystals, oil, blueprints;
+    if (star === "star1") { stone = 12000 * 5; crystals = 145 * 5; oil = 20000000 * 5; blueprints = 5; }
+    else if (star === "star2") { stone = 16000 * 5; crystals = 200 * 5; oil = 30000000 * 5; blueprints = 10; }
+    else if (star === "star3") { stone = 20000 * 5; crystals = 235 * 5; oil = 40000000 * 5; blueprints = 15; }
+    else if (star === "star4") { stone = 24000 * 5; crystals = 290 * 5; oil = 45000000 * 5; blueprints = 20; }
+    document.getElementById("starResult").innerHTML = `${t('ui.stones')}: ${stone}<br>${t('ui.crystals')}: ${crystals}<br>${t('ui.oil')}: ${oil.toLocaleString()}<br>${t('ui.ur_blueprints')}: ${blueprints}`;
 }
 
 function buildCodes() {
     const container = document.getElementById("codesContainer");
     if (!container) return;
-    const codes = ["ZRR2026","ZRR6666","ZRR999","DC4KFBG","VK10KYUT","VK12KDGH","DC6KFEO","VK15KOKL","DC8KYHJ","VK20KDSM","DC10KSDF","VK35KYGD"];
+    const codes = [
+        "ZRR2026","ZRR6666","ZRR999","DC4KFBG","VK10KYUT","VK12KDGH","DC6KFEO",
+        "VK15KOKL","DC8KYHJ","VK20KDSM","DC10KSDF","VK35KYGD",
+        "VK60KPEZ","26CHOCO","VK55KHLC","ZRR100S","WELCOME26","LOUNGE619",
+        "DC18KZMR","ZRRKR617","VK45KNQX"
+    ];
     container.innerHTML = "";
     codes.forEach(code => {
         const card = document.createElement("div");
@@ -741,8 +753,19 @@ function updateLanguage() {
     document.getElementById("vsBonusNote").innerText = t('ui.vs_bonus_note');
     document.getElementById("itemsListHeader").innerText = t('ui.items_header');
     document.getElementById("convChainDesc").innerText = t('ui.conv_chain_desc');
-    document.getElementById("star1Label").childNodes[2].textContent = t('ui.star1_label');
-    document.getElementById("star2Label").childNodes[2].textContent = t('ui.star2_label');
+    const starLabels = ['star1Label','star2Label','star3Label','star4Label'];
+    starLabels.forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.innerText = t('ui.'+id);
+    });
+    document.getElementById("star1Label").innerText = t('ui.star1_label');
+    document.getElementById("star2Label").innerText = t('ui.star2_label');
+    document.getElementById("star3Label").innerText = t('ui.star3_label');
+    document.getElementById("star4Label").innerText = t('ui.star4_label');
+
+    // Обновляем памятку о чертежах
+    const noteEl = document.getElementById("blueprintNote");
+    if (noteEl) noteEl.innerText = t('ui.blueprint_note');
 
     buildPhases();
     buildScoreCalculator();
@@ -787,6 +810,14 @@ document.addEventListener("DOMContentLoaded", () => {
     const themeToggle = document.getElementById("themeToggle");
     const langToggle = document.getElementById("langToggle");
     const tzSelect = document.getElementById("tzSelect");
+    const controlsToggle = document.getElementById("toggleControlsBtn");
+    const headerControls = document.getElementById("headerControls");
+    let controlsVisible = true;
+    controlsToggle.addEventListener("click", () => {
+        controlsVisible = !controlsVisible;
+        headerControls.style.display = controlsVisible ? 'flex' : 'none';
+        controlsToggle.innerText = controlsVisible ? '⚙️' : '⚙️';
+    });
     for (let i = -12; i <= 14; i++) {
         const opt = document.createElement("option");
         const val = (i >= 0 ? "+" : "") + i;
