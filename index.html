@@ -59,6 +59,8 @@
 
     <div class="tab-content active" id="tab-phases"><div id="phasesContainer"></div></div>
     <div class="tab-content" id="tab-score">
+        <!-- Предупреждение выводится динамически через JS, но оставим резервный блок на случай -->
+        <div id="scoreWarningContainer"></div>
         <div class="vs-panel">
             <h3 id="vsTitle">⚙️ Технологии VS (бонусы в %)</h3>
             <div class="vs-grid">
@@ -147,6 +149,8 @@
     </div>
 
     <div class="tab-content" id="tab-itemupgrade">
+        <!-- Памятка о чертежах -->
+        <div id="blueprintNote" class="small-note" style="background: var(--warning-bg); padding: 8px 12px; border-radius: 12px; margin-bottom: 12px; border-left: 4px solid var(--warning-border);"></div>
         <div class="upgrade-calc">
             <h3>⚡ Прокачка золотых вещей (0–40)</h3>
             <p>Введите текущий и целевой уровень. Стоимость в очищенных камнях и нефти.</p>
